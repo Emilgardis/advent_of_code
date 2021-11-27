@@ -46,16 +46,24 @@ use aoc::Solver;
 use itertools::Itertools;
 
 impl Solver for Solution {
-    type Input<'a> = ();
+    type Input<'a> = Vec<usize>;
 
     type Output = usize;
 
     fn generate_input(input: &'_ str) -> Result<Self::Input<'_>, Report> {
-        todo!()
+        Ok(input.split_whitespace().map(|i| i.parse()).collect::<Result<_,_>>()?)
     }
 
     fn solve(input: Self::Input<'_>) -> Result<Self::Output, Report> {
-        todo!()
+        let index = 0;
+        for a in input.iter() {
+            for b in input.iter() {
+                if a + b == 2020 {
+                    return Ok(a * b);
+                }
+            }
+        }
+        Err(eyre::eyre!("no solution found"))
     }
 }
 
@@ -66,10 +74,15 @@ impl Solution {}
 #[test]
 fn test_solution() {
     let input = r#"
-0
+    1721
+    979
+    366
+    299
+    675
+    1456
     "#;
     let input = Solution::generate_input(input).unwrap();
-    assert_eq!(Solution::solve(input).unwrap(), 0);
+    assert_eq!(Solution::solve(input).unwrap(), 514579);
 }
 
 pub fn main() -> Result<(), eyre::Report> {

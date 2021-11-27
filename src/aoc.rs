@@ -1,7 +1,11 @@
-use std::{fmt, collections::BTreeMap, path::{PathBuf, Path}};
+use std::{
+    collections::BTreeMap,
+    fmt,
+    path::{Path, PathBuf},
+};
 
 use eyre::WrapErr;
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 use crate::Solver;
 
@@ -35,18 +39,25 @@ impl Aoc {
         let root = find_root().wrap_err("when trying to find root_dir of aocf")?;
         Self::on_root_dir(&root, year, day)
     }
-    pub fn on_root_dir(root: &Path, year: &impl fmt::Display, day: &impl fmt::Display) -> eyre::Result<Self> {
+
+    pub fn on_root_dir(
+        root: &Path,
+        year: &impl fmt::Display,
+        day: &impl fmt::Display,
+    ) -> eyre::Result<Self> {
         let file_path = root.join(format!(".aocf/cache/aoc{year}_{day:0>2}.json"));
-        let file =  std::fs::File::open(&file_path).wrap_err(format!("could not open aoc file on {file_path:?}"))?;
-        serde_json::from_reader(&file).wrap_err("when trying to deserialize aoc").map_err(Into::into)
+        let file = std::fs::File::open(&file_path)
+            .wrap_err(format!("could not open aoc file on {file_path:?}"))?;
+        serde_json::from_reader(&file)
+            .wrap_err("when trying to deserialize aoc")
+            .map_err(Into::into)
     }
-    pub fn solve_first<S: Solver>(&self) -> eyre::Result<S::Output> {
-        let input = S::generate_input(&self.input).wrap_err("could not create input")?;
-        S::solve_first(&input).wrap_err("could not solve")
-    }
-    pub fn solve_second<S: Solver>(&self) -> eyre::Result<S::Output> {
-        let input = S::generate_input(&self.input).wrap_err("could not create input")?;
-        S::solve_second(&input).wrap_err("could not solve")
+
+    pub fn solve<S: Solver<YEAR, DAY, PART>, const YEAR: u32, const DAY: u32, const PART: u32>(
+    ) -> eyre::Result<S::Output> {
+        let aoc = Self::new(&YEAR, &DAY)?;
+        let input = S::generate_input(&aoc.input).wrap_err("could not create input")?;
+        S::solve(&input).wrap_err("could not solve {YEAR}-{DAY}-{PART}")
     }
 }
 
@@ -54,7 +65,8 @@ impl Aoc {
 pub fn find_root() -> eyre::Result<std::path::PathBuf> {
     let cwd = std::env::current_dir()?;
 
-    let conf_dir = cwd.ancestors()
+    let conf_dir = cwd
+        .ancestors()
         .find(|dir| dir.join(".aocf").is_dir())
         .filter(|dir| dir.join(".aocf/config").is_file());
 

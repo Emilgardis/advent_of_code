@@ -1,0 +1,11 @@
+pub const Year2015: u32 = 2015;
+pub const Year2016: u32 = 2016;
+pub const Year2017: u32 = 2017;
+pub const Year2018: u32 = 2018;
+pub const Year2019: u32 = 2019;
+pub const Year2020: u32 = 2020;
+pub const Year2021: u32 = 2021;
+pub const Year2022: u32 = 2022;
+pub const Year2023: u32 = 2023;
+pub const Year2024: u32 = 2024;
+pub const Year2025: u32 = 2025;

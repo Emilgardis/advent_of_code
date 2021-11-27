@@ -40,12 +40,11 @@
 //!
 //! Answer:
 
-use aoc::Aoc;
-use aoc::Solver;
+use aoc::{Aoc, parts::*, Solver};
 use eyre::Report;
 use itertools::Itertools;
 
-impl Solver for Solution {
+impl Solver<Year2020, Day1, Part1> for Solution {
     type Input<'a> = Vec<usize>;
 
     type Output = usize;
@@ -57,7 +56,7 @@ impl Solver for Solution {
             .collect::<Result<_, _>>()?)
     }
 
-    fn solve_first(input: &Self::Input<'_>) -> Result<Self::Output, Report> {
+    fn solve(input: &Self::Input<'_>) -> Result<Self::Output, Report> {
         for (a_index, a) in input.iter().enumerate() {
             for b in input.iter().skip(a_index + 1) {
                 if a + b == 2020 {
@@ -67,8 +66,18 @@ impl Solver for Solution {
         }
         Err(eyre::eyre!("no solution found"))
     }
+}
 
-    fn solve_second(input: &Self::Input<'_>) -> Result<Self::Output, Report> {
+impl Solver<Year2020, Day1, Part2> for Solution {
+    type Input<'a> = Vec<usize>;
+
+    type Output = usize;
+
+    fn generate_input(input: &'_ str) -> Result<Self::Input<'_>, Report> {
+        <Self as Solver<Year2020, Day1, Part1>>::generate_input(input)
+    }
+
+    fn solve(input: &Self::Input<'_>) -> Result<Self::Output, Report> {
         for (a_index, a) in input.iter().enumerate() {
             for (b_index, b) in input.iter().skip(a_index + 1).enumerate() {
                 for (c_index, c) in input.iter().skip(b_index + 1).enumerate() {
@@ -96,8 +105,7 @@ fn test_first_solution() {
     675
     1456
     "#;
-    let input = Solution::generate_input(input).unwrap();
-    assert_eq!(Solution::solve_first(&input).unwrap(), 514579);
+    assert_eq!(aoc::solve_with_input::<Solution, Year2020, Day1, Part1>(input).unwrap(), 514579);
 }
 
 #[test]
@@ -110,6 +118,5 @@ fn test_second_solution() {
     675
     1456
     "#;
-    let input = Solution::generate_input(input).unwrap();
-    assert_eq!(Solution::solve_second(&input).unwrap(), 241861950);
+    assert_eq!(aoc::solve_with_input::<Solution, Year2020, Day1, Part2>(input).unwrap(), 241861950);
 }

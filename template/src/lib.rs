@@ -11,12 +11,12 @@
 //! 
 //! * 
 
+
+use aoc::{parts::*, Solver};
 use eyre::Report;
-use aoc::Aoc;
-use aoc::Solver;
 use itertools::Itertools;
 
-impl Solver for Solution {
+impl Solver<Year{{year}}, Day{{day}}, Part1> for Solution {
     type Input<'a> = ();
 
     type Output = usize;
@@ -25,11 +25,21 @@ impl Solver for Solution {
         todo!()
     }
 
-    fn solve_first(input: &Self::Input<'_>) -> Result<Self::Output, Report> {
+    fn solve(input: &Self::Input<'_>) -> Result<Self::Output, Report> {
         todo!()
     }
+}
 
-    fn solve_second(input: &Self::Input<'_>) -> Result<Self::Output, Report> {
+impl Solver<Year{{year}}, Day{{day}}, Part2> for Solution {
+    type Input<'a> = ();
+
+    type Output = usize;
+
+    fn generate_input(input: &'_ str) -> Result<Self::Input<'_>, Report> {
+        <Self as Solver<Year{{year}}, Day{{day}}, Part1>>::generate_input(input)
+    }
+
+    fn solve(input: &Self::Input<'_>) -> Result<Self::Output, Report> {
         todo!()
     }
 }
@@ -39,19 +49,36 @@ pub struct Solution {}
 impl Solution {}
 
 #[test]
-fn test_solution() {
+fn test_solution() -> Result<(), Report> {
+    aoc::test_util::init();
     let input = r#"
 0
     "#;
-    let input = Solution::generate_input(input).unwrap();
-    assert_eq!(Solution::solve_first(&input).unwrap(), 0);
+    assert_eq!(aoc::solve_with_input::<Solution, Year{{year}}, Day{{day}}, Part1>(input)?, 0);
+    Ok(())
 }
 
 #[test]
-fn test_solution_second() {
+fn test_solution_second() -> Result<(), Report> {
+    aoc::test_util::init();
     let input = r#"
 0
     "#;
-    let input = Solution::generate_input(input).unwrap();
-    assert_eq!(Solution::solve_second(&input).unwrap(), 0);
+    assert_eq!(aoc::solve_with_input::<Solution, Year{{year}}, Day{{day}}, Part2>(input)?, 0);
+    Ok(())
+}
+
+
+#[test]
+#[ignore]
+fn solve_solution() -> Result<(), Report> {
+    aoc::test_util::init();
+    aoc::Aoc::solve::<Solution, Year{{year}}, Day{{day}}, Part1>().map(|s| {println!(":: ⭐Solution found⭐ ::\n{}", s)})
+}
+
+#[test]
+#[ignore]
+fn solve_solution_second() -> Result<(), Report>{
+    aoc::test_util::init();
+    aoc::Aoc::solve::<Solution, Year{{year}}, Day{{day}}, Part2>().map(|s| {println!(":: ⭐Solution found⭐ ::\n{}", s)})
 }

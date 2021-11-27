@@ -14,8 +14,3 @@ color-eyre = "0.5"
 
 [dev-dependencies]
 criterion = "0.3"
-
-[[bench]]
-name = "y2020_day1-report_repair"
-harness = false
-path = "src/bench.rs"

@@ -41,16 +41,12 @@ fn update(flags: &flags::Second) -> Result<()> {
 
     let data = aoc::Aoc::on_root_dir(&root_dir, &year, &day)?;
 
-    let day_dir = dbg!(root_dir.join(format!(
+    let day_dir = root_dir.join(format!(
         "{year}/day{day:0>2}-{}",
         to_snake_case(&data.title)
-    )));
+    ));
     let path = day_dir.join("src/lib.rs");
-    let mut file = std::fs::OpenOptions::new()
-        .create(true)
-        .truncate(true)
-        .write(true)
-        .open(&path)?;
+
     let mut string = String::new();
     let mut inside_description = false;
     for line in std::fs::read_to_string(&path)
@@ -59,14 +55,16 @@ fn update(flags: &flags::Second) -> Result<()> {
     {
         if line.contains("---STARTOFDESCRIPTION---") {
             string.push_str(line);
+            string.push_str("\n//!");
 
             inside_description = true;
             let add_lines = &data
                 .brief
-                .get(&aoc::Level::First)
+                .get(&aoc::Level::Second)
                 .map(|s| s.as_str())
-                .unwrap_or("")
+                .ok_or_else(|| eyre::eyre!("could not find second level"))?
                 .replace("\n", "\n//! ");
+                println!("{add_lines}");
 
             string.push_str(add_lines);
             string.push('\n');
@@ -80,6 +78,11 @@ fn update(flags: &flags::Second) -> Result<()> {
             string.push('\n');
         }
     }
+    let mut file = std::fs::OpenOptions::new()
+        .create(true)
+        .truncate(true)
+        .write(true)
+        .open(&path)?;
     file.write_all(string.as_bytes())?;
     Ok(())
 }
@@ -108,15 +111,15 @@ fn generate_day(flags: &flags::NewDay) -> Result<()> {
 
     let files = walkdir::WalkDir::new(&template_dir);
 
-    let day_dir = dbg!(root_dir.join(format!(
+    let day_dir = root_dir.join(format!(
         "{year}/day{day:0>2}-{}",
         to_snake_case(&data.title)
-    )));
+    ));
 
     // Now, generate the template
     for dir_entry in files {
         let dir_entry = dir_entry?;
-        let path = dbg!(dir_entry.path());
+        let path = dir_entry.path();
         eprintln!("{:?}", path.display());
         if !path.is_file() {
             continue;
@@ -137,7 +140,7 @@ fn generate_day(flags: &flags::NewDay) -> Result<()> {
                 .replace("\n", "\n//! "),
         );
 
-        let depth = dbg!(dir_entry.depth());
+        let depth = dir_entry.depth();
         let parent_len = path.components().count() - depth;
         let mut components = path.components();
         for _ in 0..parent_len {

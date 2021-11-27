@@ -11,11 +11,3 @@ eyre = "0.6"
 tracing = "0.1"
 itertools = "0.10"
 color-eyre = "0.5"
-
-[dev-dependencies]
-criterion = "0.3"
-
-[[bench]]
-name = "y{{year}}_day{{day}}-{{title_snake}}"
-harness = false
-path = "src/bench.rs"

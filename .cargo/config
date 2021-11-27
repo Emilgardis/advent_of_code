@@ -6,3 +6,6 @@ lint = "clippy --all-targets -- -Aclippy::collapsible_if -Aclippy::needless_pass
 
 [target.x86_64-pc-windows-msvc]
 linker = "rust-lld"
+
+[profile.dev.package.backtrace]
+opt-level = 3

@@ -11,6 +11,7 @@
 use eyre::Report;
 use aoc::Aoc;
 use aoc::Solver;
+use itertools::Itertools;
 
 impl Solver for Solution {
     type Input<'a> = ();
@@ -40,7 +41,8 @@ fn test_solution() {
 }
 
 pub fn main() -> Result<(), eyre::Report> {
-    let aoc = Aoc::new(&2020, &1)?;
-    aoc.solve::<Solution>()?;
+    color_eyre::install()?;
+    let aoc = Aoc::new(&{{year}}, &{{day}})?;
+    println!("⭐Solution found⭐ ::\n{}", aoc.solve::<Solution>()?);
     Ok(())
 }

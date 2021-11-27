@@ -27,7 +27,7 @@ pub struct Aoc {
     pub stars: Option<u8>,
     pub solution: BTreeMap<Level, String>,
     pub input: String,
-    brief: BTreeMap<Level, String>,
+    pub brief: BTreeMap<Level, String>,
 }
 
 impl Aoc {

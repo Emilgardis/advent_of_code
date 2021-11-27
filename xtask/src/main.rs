@@ -56,6 +56,7 @@ fn generate_day(flags: &flags::NewDay) -> Result<()> {
         let contents = contents.replace("{{title_snake}}", &to_snake_case(&data.title));
         let contents = contents.replace("{{title}}", &data.title);
         let contents = contents.replace("{{level}}", &data.level.to_string());
+        let contents = contents.replace("{{brief}}", &data.brief.get(&aoc::Level::First).map(|s| s.as_str()).unwrap_or("").replace("\n", "\n//! "));
         
         let depth = dbg!(dir_entry.depth());
         let parent_len = path.components().count() - depth;

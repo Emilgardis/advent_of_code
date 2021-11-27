@@ -1,0 +1,5 @@
+{
+    "rust-analyzer.experimental.procAttrMacros": true,
+    "rust-analyzer.checkOnSave.enable": true,
+
+}

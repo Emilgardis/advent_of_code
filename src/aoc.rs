@@ -40,9 +40,13 @@ impl Aoc {
         let file =  std::fs::File::open(&file_path).wrap_err(format!("could not open aoc file on {file_path:?}"))?;
         serde_json::from_reader(&file).wrap_err("when trying to deserialize aoc").map_err(Into::into)
     }
-    pub fn solve<S: Solver>(&self) -> eyre::Result<S::Output> {
+    pub fn solve_first<S: Solver>(&self) -> eyre::Result<S::Output> {
         let input = S::generate_input(&self.input).wrap_err("could not create input")?;
-        S::solve(input).wrap_err("could not solve")
+        S::solve_first(&input).wrap_err("could not solve")
+    }
+    pub fn solve_second<S: Solver>(&self) -> eyre::Result<S::Output> {
+        let input = S::generate_input(&self.input).wrap_err("could not create input")?;
+        S::solve_second(&input).wrap_err("could not solve")
     }
 }
 

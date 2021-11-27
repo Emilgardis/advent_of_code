@@ -21,7 +21,11 @@ impl Solver for Solution {
         todo!()
     }
 
-    fn solve(input: Self::Input<'_>) -> Result<Self::Output, Report> {
+    fn solve_first(input: &Self::Input<'_>) -> Result<Self::Output, Report> {
+        todo!()
+    }
+
+    fn solve_second(input: &Self::Input<'_>) -> Result<Self::Output, Report> {
         todo!()
     }
 }
@@ -36,13 +40,22 @@ fn test_solution() {
 0
     "#;
     let input = Solution::generate_input(input).unwrap();
-    assert_eq!(Solution::solve(input).unwrap(), 0);
+    assert_eq!(Solution::solve_first(input).unwrap(), 0);
+}
+
+#[test]
+fn test_solution_second() {
+    let input = r#"
+0
+    "#;
+    let input = Solution::generate_input(input).unwrap();
+    assert_eq!(Solution::solve_second(input).unwrap(), 0);
 }
 
 pub fn main() -> Result<(), eyre::Report> {
     color_eyre::install()?;
     let aoc = Aoc::new(&{{year}}, &{{day}})?;
-    println!("⭐Solution found⭐ ::\n{}", aoc.solve::<Solution>()?);
+    println!("⭐Solution found⭐ ::\n{}", aoc.solve_first::<Solution>()?);
     Ok(())
 }
 

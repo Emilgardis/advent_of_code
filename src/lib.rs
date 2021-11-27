@@ -10,5 +10,7 @@ pub trait Solver {
 
     fn generate_input(input: &'_ str) -> Result<Self::Input<'_>, Report>;
 
-    fn solve(input: Self::Input<'_>) -> Result<Self::Output, Report>;
+    fn solve_first(input: &Self::Input<'_>) -> Result<Self::Output, Report>;
+
+    fn solve_second(input: &Self::Input<'_>) -> Result<Self::Output, Report>;
 }

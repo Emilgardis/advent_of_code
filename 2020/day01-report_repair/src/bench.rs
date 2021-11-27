@@ -15,8 +15,12 @@ fn bench_solution(c: &mut Criterion) {
 
     let input = Solution::generate_input(&aoc.input).unwrap();
 
-    group.bench_with_input(BenchmarkId::from_parameter("Solution"), &input, |b, &i| {
-        b.iter(|| { Solution::solve(i) }.unwrap())
+    group.bench_with_input(BenchmarkId::from_parameter("Solution"), &input, |b, i| {
+        b.iter(|| { Solution::solve_first(i) }.unwrap())
+    });
+
+    group.bench_with_input(BenchmarkId::from_parameter("Solution"), &input, |b, i| {
+        b.iter(|| { Solution::solve_second(i) }.unwrap())
     });
 
     group.finish();

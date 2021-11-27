@@ -10,6 +10,10 @@ xflags::xflags! {
             optional -d, --day day: String
             optional -f, --force
         }
+        cmd second {
+            optional -y, --year year: String
+            optional -d, --day day: String
+        }
     }
 }
 // generated start
@@ -24,6 +28,7 @@ pub struct App {
 #[derive(Debug)]
 pub enum AppCmd {
     NewDay(NewDay),
+    Second(Second),
 }
 
 #[derive(Debug)]
@@ -31,6 +36,12 @@ pub struct NewDay {
     pub year: Option<String>,
     pub day: Option<String>,
     pub force: bool,
+}
+
+#[derive(Debug)]
+pub struct Second {
+    pub year: Option<String>,
+    pub day: Option<String>,
 }
 
 impl App {

@@ -1,7 +1,7 @@
 #![feature(test)]
 
 use aoc::Solver;
-use y{{year}}_day{{day}}_{{title_snake}}::Solution;
+use y2020_day2_password_philosophy::Solution;
 
 use criterion::{black_box, criterion_group, criterion_main, BenchmarkId, Criterion};
 
@@ -11,7 +11,7 @@ criterion_main!(benches);
 fn bench_solution(c: &mut Criterion) {
     let aoc = aoc::Aoc::new(&2020, &1).unwrap();
 
-    let mut group = c.benchmark_group("{{title}}");
+    let mut group = c.benchmark_group("Password Philosophy");
 
     let input = Solution::generate_input(&aoc.input).unwrap();
 

@@ -5,9 +5,6 @@ edition = "2021"
 publish = false
 license = "MIT OR Apache-2.0"
 
-[lib]
-path = "src/main.rs"
-
 [dependencies]
 aoc = { path = "../.." }
 eyre = "0.6"

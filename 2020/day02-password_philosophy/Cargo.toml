@@ -1,5 +1,5 @@
 [package]
-name = "y{{year}}_day{{day}}-{{title_snake}}"
+name = "y2020_day2-password_philosophy"
 version = "0.1.0"
 edition = "2021"
 publish = false
@@ -16,6 +16,6 @@ color-eyre = "0.5"
 criterion = "0.3"
 
 [[bench]]
-name = "y{{year}}_day{{day}}-{{title_snake}}"
+name = "y2020_day2-password_philosophy"
 harness = false
 path = "src/bench.rs"

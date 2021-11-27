@@ -5,7 +5,7 @@ use aoc::{Aoc, parts::*};
 
 pub fn main() -> Result<(), eyre::Report> {
     color_eyre::install()?;
-    println!(":: ⭐Solution found⭐ ::\n{}", Aoc::solve::<Solution, Year2020, Day3, Part1>()?);
+    println!(":: ⭐Solution found⭐ ::\n{}", Aoc::solve::<Solution, Year2020, Day3, Part2>()?);
     Ok(())
 }
 

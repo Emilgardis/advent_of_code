@@ -53,7 +53,7 @@ fn test_solution() -> Result<(), Report> {
     aoc::test_util::init();
     let input = r#"
 0
-    "#;
+    "#.trim();
     assert_eq!(aoc::solve_with_input::<Solution, Year{{year}}, Day{{day}}, Part1>(input)?, 0);
     Ok(())
 }
@@ -63,7 +63,7 @@ fn test_solution_second() -> Result<(), Report> {
     aoc::test_util::init();
     let input = r#"
 0
-    "#;
+    "#.trim();
     assert_eq!(aoc::solve_with_input::<Solution, Year{{year}}, Day{{day}}, Part2>(input)?, 0);
     Ok(())
 }

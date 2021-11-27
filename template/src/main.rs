@@ -7,7 +7,6 @@
 //! 
 //! {{brief}}
 
-
 use eyre::Report;
 use aoc::Aoc;
 use aoc::Solver;
@@ -46,3 +45,4 @@ pub fn main() -> Result<(), eyre::Report> {
     println!("⭐Solution found⭐ ::\n{}", aoc.solve::<Solution>()?);
     Ok(())
 }
+

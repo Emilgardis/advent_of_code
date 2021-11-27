@@ -10,8 +10,7 @@
 //! 
 //! After saving Christmas [five years in a row](/events), you've decided to take a vacation at a nice resort on a tropical island. Surely, Christmas will go on without you.
 //! 
-//! The tropical island has its own currency and is entirely cash-only. The gold coins used there have a little picture of a starfish; the locals just call them *stars*. 
-//! None of the currency exchanges seem to have heard of them, but somehow, you'll need to find fifty of these coins by the time you arrive so you can pay the deposit on your room.
+//! The tropical island has its own currency and is entirely cash-only. The gold coins used there have a little picture of a starfish; the locals just call them *stars*. None of the currency exchanges seem to have heard of them, but somehow, you'll need to find fifty of these coins by the time you arrive so you can pay the deposit on your room.
 //! 
 //! To save your vacation, you need to get all *fifty stars* by December 25th.
 //! 
@@ -41,10 +40,10 @@
 //! 
 //! Answer:
 
-
 use eyre::Report;
 use aoc::Aoc;
 use aoc::Solver;
+use itertools::Itertools;
 
 impl Solver for Solution {
     type Input<'a> = ();
@@ -74,7 +73,9 @@ fn test_solution() {
 }
 
 pub fn main() -> Result<(), eyre::Report> {
+    color_eyre::install()?;
     let aoc = Aoc::new(&2020, &1)?;
-    aoc.solve::<Solution>()?;
+    println!("⭐Solution found⭐ ::\n{}", aoc.solve::<Solution>()?);
     Ok(())
 }
+

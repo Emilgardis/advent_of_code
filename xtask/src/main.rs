@@ -64,7 +64,6 @@ fn update(flags: &flags::Second) -> Result<()> {
                 .map(|s| s.as_str())
                 .ok_or_else(|| eyre::eyre!("could not find second level"))?
                 .replace("\n", "\n//! ");
-                println!("{add_lines}");
 
             string.push_str(add_lines);
             string.push('\n');
@@ -120,7 +119,6 @@ fn generate_day(flags: &flags::NewDay) -> Result<()> {
     for dir_entry in files {
         let dir_entry = dir_entry?;
         let path = dir_entry.path();
-        eprintln!("{:?}", path.display());
         if !path.is_file() {
             continue;
         }

@@ -1,4 +1,4 @@
-use std::{path::PathBuf, io::Write};
+use std::{io::Write, path::PathBuf};
 
 pub mod days;
 pub mod years;

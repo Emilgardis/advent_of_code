@@ -57,13 +57,12 @@
 //! Although it hasn't changed, you can still [get your puzzle input](2/input).
 //! <!---ENDOFDESCRIPTION--->
 
-use aoc::{Aoc, parts::*, Solver};
+use aoc::{parts::*, Solver};
 
 use eyre::Context;
 use eyre::ContextCompat;
 use eyre::Report;
 use itertools::Itertools;
-
 
 impl Solver<Year2020, Day2, Part1> for Solution {
     type Input<'a> = Vec<Row<'a>>;
@@ -81,7 +80,6 @@ impl Solver<Year2020, Day2, Part1> for Solution {
 
     fn solve(input: &Self::Input<'_>) -> Result<Self::Output, Report> {
         Ok(input.iter().filter(|row| row.is_valid()).count())
-
     }
 }
 
@@ -96,7 +94,6 @@ impl Solver<Year2020, Day2, Part2> for Solution {
 
     fn solve(input: &Self::Input<'_>) -> Result<Self::Output, Report> {
         Ok(input.iter().filter(|row| row.is_valid_official()).count())
-
     }
 }
 
@@ -126,7 +123,7 @@ impl<'a> Row<'a> {
     pub fn is_valid_official(&self) -> bool {
         let mut count = 0;
         for (i, c) in self.password.chars().enumerate() {
-            if c == self.policy.letter && (i + 1 == self.policy.min ||  i + 1 == self.policy.max) {
+            if c == self.policy.letter && (i + 1 == self.policy.min || i + 1 == self.policy.max) {
                 count += 1;
             }
         }
@@ -166,7 +163,10 @@ fn test_solution() {
 1-3 b: cdefg
 2-9 c: ccccccccc
     "#;
-    assert_eq!(aoc::solve_with_input::<Solution, Year2020, Day2, Part1>(input).unwrap(), 2);
+    assert_eq!(
+        aoc::solve_with_input::<Solution, Year2020, Day2, Part1>(input).unwrap(),
+        2
+    );
 }
 
 #[test]
@@ -176,5 +176,8 @@ fn test_solution_second() {
     1-3 b: cdefg
     2-9 c: ccccccccc
     "#;
-    assert_eq!(aoc::solve_with_input::<Solution, Year2020, Day2, Part2>(input).unwrap(), 1);
+    assert_eq!(
+        aoc::solve_with_input::<Solution, Year2020, Day2, Part2>(input).unwrap(),
+        1
+    );
 }

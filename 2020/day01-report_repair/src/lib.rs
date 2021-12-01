@@ -40,7 +40,7 @@
 //!
 //! Answer:
 
-use aoc::{Aoc, parts::*, Solver};
+use aoc::{parts::*, Solver};
 use eyre::Report;
 use itertools::Itertools;
 
@@ -105,7 +105,10 @@ fn test_first_solution() {
     675
     1456
     "#;
-    assert_eq!(aoc::solve_with_input::<Solution, Year2020, Day1, Part1>(input).unwrap(), 514579);
+    assert_eq!(
+        aoc::solve_with_input::<Solution, Year2020, Day1, Part1>(input).unwrap(),
+        514579
+    );
 }
 
 #[test]
@@ -118,5 +121,8 @@ fn test_second_solution() {
     675
     1456
     "#;
-    assert_eq!(aoc::solve_with_input::<Solution, Year2020, Day1, Part2>(input).unwrap(), 241861950);
+    assert_eq!(
+        aoc::solve_with_input::<Solution, Year2020, Day1, Part2>(input).unwrap(),
+        241861950
+    );
 }

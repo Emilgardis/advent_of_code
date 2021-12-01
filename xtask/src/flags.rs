@@ -1,5 +1,3 @@
-
-
 xflags::xflags! {
     src "./src/flags.rs"
     cmd app

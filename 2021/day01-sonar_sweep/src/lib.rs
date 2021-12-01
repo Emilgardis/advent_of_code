@@ -132,13 +132,7 @@ impl Solver<Year2021, Day1, Part1> for Solution {
     }
 
     fn solve(input: &Self::Input<'_>) -> Result<Self::Output, Report> {
-        let mut incr = 0;
-        for (prev, curr) in input.iter().tuple_windows() {
-            if curr > prev {
-                incr += 1;
-            }
-        }
-        Ok(incr)
+        Ok(input.iter().tuple_windows().filter(|(a, b)| b > a).count())
     }
 }
 
@@ -152,14 +146,8 @@ impl Solver<Year2021, Day1, Part2> for Solution {
     }
 
     fn solve(input: &Self::Input<'_>) -> Result<Self::Output, Report> {
-        let mut incr = 0;
         let sums = input.iter().tuple_windows().map(|(a, b, c)| a + b + c);
-        for (prev, curr) in sums.tuple_windows() {
-            if curr > prev {
-                incr += 1;
-            }
-        }
-        Ok(incr)
+        Ok(sums.tuple_windows().filter(|(a, b)| b > a).count())
     }
 }
 

@@ -1,15 +1,23 @@
 // Inspired by https://github.com/ZcashFoundation/zebra/blob/2f46d698dd86e40e7928bddca948f5be14667934/zebra-test/src/lib.rs
-#[cfg(test)]
 use color_eyre::section::PanicMessage;
-#[cfg(test)]
 use owo_colors::OwoColorize;
 use std::sync::Once;
-
+use tracing_subscriber::{prelude::*, util::SubscriberInitExt};
 static INIT: Once = Once::new();
 
 pub fn init() {
-    #[cfg(test)]
     INIT.call_once(|| {
+        let fmt_layer = tracing_subscriber::fmt::layer().with_target(false);
+        // Use the RUST_LOG env var, or by default:
+        //  - warn for most tests, and
+        //  - for some modules, hide expected warn logs
+        let filter_layer = tracing_subscriber::EnvFilter::try_from_default_env()
+            .unwrap_or_else(|_| tracing_subscriber::EnvFilter::try_new("debug").unwrap());
+        tracing_subscriber::registry()
+            .with(filter_layer)
+            .with(fmt_layer)
+            .with(tracing_error::ErrorLayer::default())
+            .init();
         color_eyre::config::HookBuilder::default()
             .add_frame_filter(Box::new(|frames| {
                 let mut displayed = std::collections::HashSet::new();
@@ -50,10 +58,8 @@ pub fn init() {
     })
 }
 
-#[cfg(test)]
 struct SkipTestReturnedErrPanicMessages;
 
-#[cfg(test)]
 impl PanicMessage for SkipTestReturnedErrPanicMessages {
     fn display(
         &self,
@@ -70,7 +76,6 @@ impl PanicMessage for SkipTestReturnedErrPanicMessages {
         // skip panic output that is clearly from tests that returned an `Err`
         // and assume that the test handler has already printed the value inside
         // of the `Err`.
-        dbg!("{}", payload);
         if payload.contains("the test returned a termination value with a non-zero status code") {
             return write!(f, "---- end of test output ----");
         }

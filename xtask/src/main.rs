@@ -54,7 +54,7 @@ fn update(flags: &flags::Second) -> Result<()> {
     let mut string = String::new();
     let mut inside_description = false;
     for line in std::fs::read_to_string(&path)
-        .expect("could not open file")
+        .with_context(|| eyre::eyre!("could not open file, {}", path.display()))?
         .lines()
     {
         if line.contains("---STARTOFDESCRIPTION---") {

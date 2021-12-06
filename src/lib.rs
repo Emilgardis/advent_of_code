@@ -13,6 +13,8 @@ pub use crate::aoc::{Aoc, Level};
 use eyre::Report;
 pub use utils::*;
 
+pub use owo_colors;
+
 pub trait Solver<const YEAR: u32, const DAY: u32, const PART: u32> {
     type Input<'a>
     where

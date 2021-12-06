@@ -5,7 +5,7 @@
 //!
 //! ## Description
 //! <!---STARTOFDESCRIPTION--->
-//! \--- Day 4: Giant Squid ---
+//!\--- Day 4: Giant Squid ---
 //! ----------
 //!
 //! You're already almost 1.5km (almost a mile) below the surface of the ocean, already so deep that you can't see any sunlight. What you *can* see, however, is a giant squid that has attached itself to the outside of your submarine.
@@ -78,9 +78,24 @@
 //!
 //! To guarantee victory against the giant squid, figure out which board will win first. *What will your final score be if you choose that board?*
 //!
-//! To begin, [get your puzzle input](4/input).
+//! Your puzzle answer was `46920`.
+//!
+//! The first half of this puzzle is complete! It provides one gold star: \*
+//!
+//! \--- Part Two ---
+//! ----------
+//!
+//! On the other hand, it might be wise to try a different strategy: let the giant squid win.
+//!
+//! You aren't sure how many bingo boards a giant squid could play at once, so rather than waste time counting its arms, the safe thing to do is to *figure out which board will win last* and choose that one. That way, no matter which boards it picks, it will win for sure.
+//!
+//! In the above example, the second board is the last to win, which happens after `13` is eventually called and its middle column is completely marked. If you were to keep playing until this point, the second board would have a sum of unmarked numbers equal to `148` for a final score of `148 * 13 = *1924*`.
+//!
+//! Figure out which board will win last. *Once it wins, what would its final score be?*
 //!
 //! Answer:
+//!
+//! Although it hasn't changed, you can still [get your puzzle input](4/input).
 //! <!---ENDOFDESCRIPTION--->
 //! ## Notes
 //!
@@ -108,6 +123,13 @@ impl BingoGame {
             tracing::debug!("marked: {i}\n== == == == ==\n{board}\n== == == == ==\n");
         }
     }
+    pub fn remove(&mut self, pos: usize) -> Board {
+        self.boards.remove(pos)
+    }
+    pub fn boards(&self) -> &[Board] {
+        &self.boards
+    }
+
     pub fn bingo(&self) -> Option<(usize, &Board)> {
         self.boards.iter().find_position(|b| b.bingo())
     }
@@ -158,7 +180,6 @@ impl Board {
             .chunks(WIDTH)
         {
             let chunk = chunk.collect::<Vec<_>>();
-            tracing::debug!("chunk = {chunk:?}");
             if chunk.iter().all(|&x| x) {
                 return true;
             }
@@ -210,7 +231,6 @@ impl BoardMarkerIter<'_> {
             self.index.0 = 0;
             self.index.1 += 1;
         }
-        tracing::info!("setting index: {:?}", self.index);
     }
 }
 
@@ -281,7 +301,26 @@ impl Solver<Year2021, Day4, Part2> for Solution {
     }
 
     fn solve(input: &Self::Input<'_>) -> Result<Self::Output, Report> {
-        todo!()
+        let mut game = input.clone();
+        let mut last_removed_board = Board::new(vec![100]);
+        for seq in game.sequence.clone() {
+            tracing::info!("sequence: {seq}");
+            game.mark(seq);
+            while let Some((pos, board)) = game.bingo() {
+                tracing::info!("removing: {pos}\n== == == == ==\n{board}\n== == == == ==");
+                // NLL FTW!!!
+                last_removed_board = game.remove(pos).clone();
+            }
+            match last_removed_board {
+                board if game.boards().is_empty() => {
+                    tracing::info!("last board: \n== == == == ==\n{board}\n== == == == ==");
+
+                    return Ok(board.unmarked_sum() * seq as usize);
+                }
+                _ => (),
+            }
+        }
+        eyre::bail!("no bingo found")
     }
 }
 
@@ -388,7 +427,7 @@ fn test_solution_second() -> Result<(), Report> {
     .trim();
     assert_eq!(
         aoc::solve_with_input::<Solution, Year2021, Day4, Part2>(input)?,
-        0
+        1924
     );
     Ok(())
 }

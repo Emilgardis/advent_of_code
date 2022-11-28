@@ -153,8 +153,8 @@ impl Solver<Year2021, Day3, Part2> for Solution {
     }
 
     fn solve(input: &Self::Input<'_>) -> Result<Self::Output, Report> {
-        let mut oxygen = 0usize;
-        let mut co2 = 0usize;
+        let _oxygen = 0usize;
+        let _co2 = 0usize;
         let mut oxygen_items = input.1.clone();
         let mut co2_items = input.1.clone();
 
@@ -172,7 +172,7 @@ impl Solver<Year2021, Day3, Part2> for Solution {
                     oxygen_items.len()
                 );
 
-                let remove = if (count_ones != count_zeroes) {
+                let remove = if count_ones != count_zeroes {
                     count_ones <= oxygen_items.len() / 2
                 } else {
                     false
@@ -192,7 +192,7 @@ impl Solver<Year2021, Day3, Part2> for Solution {
                     .count();
                 let count_zeroes = co2_items.len() - count_ones;
                 //tracing::info!("got {count_ones} ones and {count_zeroes} zeroes");
-                let remove = if (count_ones != count_zeroes) {
+                let remove = if count_ones != count_zeroes {
                     count_ones > co2_items.len() / 2
                 } else {
                     true

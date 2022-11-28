@@ -61,7 +61,6 @@ use aoc::{parts::*, Solver};
 use eyre::Context;
 use eyre::ContextCompat;
 use eyre::Report;
-use itertools::Itertools;
 
 impl Solver<Year2020, Day2, Part1> for Solution {
     type Input<'a> = Vec<Row<'a>>;

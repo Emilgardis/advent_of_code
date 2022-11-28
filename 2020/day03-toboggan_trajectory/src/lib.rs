@@ -99,11 +99,8 @@
 //!
 //! *
 
-use std::str::FromStr;
-
 use aoc::{parts::*, Solver};
 use eyre::Report;
-use itertools::Itertools;
 
 const SLOPES: &[Slope] = &[
     Slope { right: 1, down: 1 },

@@ -1,3 +1,4 @@
+#[cfg(test)]
 use std::{io::Write, path::PathBuf};
 
 pub mod days;

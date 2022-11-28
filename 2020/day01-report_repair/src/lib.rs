@@ -41,7 +41,6 @@
 
 use aoc::{parts::*, Solver};
 use eyre::Report;
-use itertools::Itertools;
 
 impl Solver<Year2020, Day1, Part1> for Solution {
     type Input<'a> = Vec<usize>;
@@ -79,7 +78,7 @@ impl Solver<Year2020, Day1, Part2> for Solution {
     fn solve(input: &Self::Input<'_>) -> Result<Self::Output, Report> {
         for (a_index, a) in input.iter().enumerate() {
             for (b_index, b) in input.iter().skip(a_index + 1).enumerate() {
-                for (c_index, c) in input.iter().skip(b_index + 1).enumerate() {
+                for (_c_index, c) in input.iter().skip(b_index + 1).enumerate() {
                     if a + b + c == 2020 {
                         return Ok(a * b * c);
                     }

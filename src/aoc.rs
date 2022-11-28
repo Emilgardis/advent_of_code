@@ -1,8 +1,4 @@
-use std::{
-    collections::BTreeMap,
-    fmt,
-    path::{Path, PathBuf},
-};
+use std::{collections::BTreeMap, fmt, path::Path};
 
 use eyre::WrapErr;
 use serde::{Deserialize, Serialize};

@@ -23,6 +23,7 @@ fn main() -> Result<()> {
 
 fn update(flags: &flags::Second) -> Result<()> {
     use inflections::case::to_snake_case;
+    let sh = xshell::Shell::new()?;
     let (day, year);
     // First, checkout the day
     let (day, year) = if let (Some(day), Some(year)) = (&flags.day, &flags.year) {
@@ -33,8 +34,8 @@ fn update(flags: &flags::Second) -> Result<()> {
         year = date.year().to_string();
         (day.as_str(), year.as_str())
     };
-    xshell::cmd!("aocf checkout --day {day} --year {year}").run()?;
-    xshell::cmd!("aocf fetch").run()?;
+    xshell::cmd!(sh, "aocf checkout --day {day} --year {year}").run()?;
+    xshell::cmd!(sh, "aocf fetch").run()?;
 
     // import the data.
     let root_dir = aoc::aoc::find_root()?;
@@ -88,6 +89,7 @@ fn update(flags: &flags::Second) -> Result<()> {
 
 fn generate_day(flags: &flags::NewDay) -> Result<()> {
     use inflections::case::to_snake_case;
+    let sh = xshell::Shell::new()?;
     let (day, year);
     // First, checkout the day
     let (day, year) = if let (Some(day), Some(year)) = (&flags.day, &flags.year) {
@@ -98,8 +100,8 @@ fn generate_day(flags: &flags::NewDay) -> Result<()> {
         year = date.year().to_string();
         (day.as_str(), year.as_str())
     };
-    xshell::cmd!("aocf checkout --day {day} --year {year}").run()?;
-    xshell::cmd!("aocf fetch").run()?;
+    xshell::cmd!(sh, "aocf checkout --day {day} --year {year}").run()?;
+    xshell::cmd!(sh, "aocf fetch").run()?;
 
     // import the data.
     let root_dir = aoc::aoc::find_root()?;

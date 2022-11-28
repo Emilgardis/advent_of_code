@@ -1,15 +1,14 @@
-#![feature(generic_associated_types)]
 //! Advent of code {{year}} {{day}}
-//! 
+//!
 //! https://adventofcode.com/{{year}}/day/{{day}}
-//! 
+//!
 //! ## Description
 //! <!---STARTOFDESCRIPTION--->
 //! {{brief}}
 //! <!---ENDOFDESCRIPTION--->
 //! ## Notes
-//! 
-//! * 
+//!
+//! *
 
 
 use aoc::{parts::*, Solver};

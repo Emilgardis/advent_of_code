@@ -1,4 +1,3 @@
-#![feature(generic_associated_types)]
 //! Advent of code 2021 1
 //!
 //! https://adventofcode.com/2021/day/1
@@ -70,13 +69,13 @@
 //! Instead, consider sums of a *three-measurement sliding window*. Again considering the above example:
 //!
 //! ```
-//! 199  A      
-//! 200  A B    
-//! 208  A B C  
+//! 199  A
+//! 200  A B
+//! 208  A B C
 //! 210    B C D
 //! 200  E   C D
 //! 207  E F   D
-//! 240  E F G  
+//! 240  E F G
 //! 269    F G H
 //! 260      G H
 //! 263        H

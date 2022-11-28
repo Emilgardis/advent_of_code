@@ -1,4 +1,4 @@
-#![feature(generic_associated_types, drain_filter)]
+#![feature(drain_filter)]
 //! Advent of code 2021 3
 //!
 //! https://adventofcode.com/2021/day/3

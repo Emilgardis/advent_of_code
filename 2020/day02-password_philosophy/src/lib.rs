@@ -1,4 +1,3 @@
-#![feature(generic_associated_types, let_else)]
 //! Advent of code 2020 2
 //!
 //! https://adventofcode.com/2020/day/2

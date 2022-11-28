@@ -1,4 +1,3 @@
-#![feature(generic_associated_types)]
 pub mod aoc;
 pub mod parts;
 pub mod test_util;

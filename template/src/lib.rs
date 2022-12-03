@@ -16,29 +16,29 @@ use eyre::Report;
 use itertools::Itertools;
 
 impl Solver<Year{{year}}, Day{{day}}, Part1> for Solution {
-    type Input<'a> = ();
+    type Input<'a> = Vec<&'a str>;
 
     type Output = usize;
 
     fn generate_input(input: &'_ str) -> Result<Self::Input<'_>, Report> {
-        todo!()
+        Ok(input.lines().map(|s| s.trim()).collect())
     }
 
-    fn solve(input: &Self::Input<'_>) -> Result<Self::Output, Report> {
+    fn solve(input: &Vec<&'_ str>) -> Result<Self::Output, Report> {
         todo!()
     }
 }
 
 impl Solver<Year{{year}}, Day{{day}}, Part2> for Solution {
-    type Input<'a> = ();
+    type Input<'a> = <Self as Solver<{{year}}, {{day}}, Part1>>::Input<'a>;
 
-    type Output = usize;
+    type Output = <Self as Solver<{{year}}, {{day}}, Part1>>::Output;
 
     fn generate_input(input: &'_ str) -> Result<Self::Input<'_>, Report> {
         <Self as Solver<Year{{year}}, Day{{day}}, Part1>>::generate_input(input)
     }
 
-    fn solve(input: &Self::Input<'_>) -> Result<Self::Output, Report> {
+    fn solve(input: &Vec<&'_ str>) -> Result<Self::Output, Report> {
         todo!()
     }
 }

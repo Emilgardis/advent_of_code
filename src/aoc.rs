@@ -32,7 +32,7 @@ pub struct Aoc {
 
 impl Aoc {
     pub fn new(year: &impl fmt::Display, day: &impl fmt::Display) -> eyre::Result<Self> {
-        let root = find_root().wrap_err("when trying to find root_dir of aocf")?;
+        let root = dbg!(find_root().wrap_err("when trying to find root_dir of aocf")?);
         Self::on_root_dir(&root, year, day)
     }
 
@@ -44,9 +44,9 @@ impl Aoc {
         let file_path = root.join(format!(".aocf/cache/aoc{year}_{day:0>2}.json"));
         let file = std::fs::File::open(&file_path)
             .wrap_err(format!("could not open aoc file on {file_path:?}"))?;
-        serde_json::from_reader(&file)
-            .wrap_err("when trying to deserialize aoc")
-            .map_err(Into::into)
+        dbg!(serde_json::from_reader(&file)
+                    .wrap_err("when trying to deserialize aoc")
+                    .map_err(Into::into))
     }
 
     pub fn solve<S: Solver<YEAR, DAY, PART>, const YEAR: u32, const DAY: u32, const PART: u32>(

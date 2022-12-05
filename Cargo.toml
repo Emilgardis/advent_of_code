@@ -14,6 +14,7 @@ tracing-subscriber = { version = "0.3.16", features = ["env-filter"] }
 tracing-error = "0.2.0"
 color-eyre = "0.6.2"
 owo-colors = "3.5"
+itertools = "0.10.5"
 
 [workspace]
 members = ["20*/day*", "xtask"]

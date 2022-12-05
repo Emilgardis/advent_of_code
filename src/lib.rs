@@ -1,8 +1,10 @@
 pub mod aoc;
 pub mod parts;
 pub mod test_util;
+pub mod utils;
 
 pub use aoc::{Aoc, Level};
+pub use utils::*;
 use eyre::Report;
 
 pub trait Solver<const YEAR: u32, const DAY: u32, const PART: u32> {

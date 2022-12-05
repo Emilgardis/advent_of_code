@@ -128,14 +128,14 @@ impl<'a> Row<'a> {
         count == 1
     }
     pub fn parse(s: &'a str) -> Result<Self, Report> {
-        let Some((policy, password)) = s.split_once(":") else {
+        let Some((policy, password)) = s.split_once(':') else {
             eyre::bail!("invalid row");
         };
-        let Some((minmax, letter)) = policy.split_once(" ") else {
+        let Some((minmax, letter)) = policy.split_once(' ') else {
             eyre::bail!("invalid policy");
         };
         let (min, max) = minmax
-            .split_once("-")
+            .split_once('-')
             .map(|(s1, s2)| -> Result<(_, _), Report> { Ok((s1.parse()?, s2.parse()?)) })
             .context("no -")?
             .context("couldn't parse numbers")?;

@@ -64,7 +64,6 @@
 
 use aoc::{parts::*, Solver};
 use eyre::Report;
-use itertools::Itertools;
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub struct Game1 {
@@ -299,7 +298,7 @@ C Z
 fn solve_solution() -> Result<(), Report> {
     aoc::test_util::init();
     aoc::Aoc::solve::<Solution, Year2022, Day2, Part1>()
-        .map(|s| println!(":: ⭐Solution found⭐ ::\n{}", s))
+        .map(|s| println!(":: ⭐Solution found⭐ ::\n{s}"))
 }
 
 #[test]
@@ -307,5 +306,5 @@ fn solve_solution() -> Result<(), Report> {
 fn solve_solution_second() -> Result<(), Report> {
     aoc::test_util::init();
     aoc::Aoc::solve::<Solution, Year2022, Day2, Part2>()
-        .map(|s| println!(":: ⭐Solution found⭐ ::\n{}", s))
+        .map(|s| println!(":: ⭐Solution found⭐ ::\n{s}"))
 }

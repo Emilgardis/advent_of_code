@@ -5,8 +5,8 @@ pub mod test_util;
 pub mod utils;
 
 pub use crate::aoc::{Aoc, Level};
-pub use utils::*;
 use eyre::Report;
+pub use utils::*;
 
 pub trait Solver<const YEAR: u32, const DAY: u32, const PART: u32> {
     type Input<'a>

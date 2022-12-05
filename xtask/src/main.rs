@@ -1,7 +1,6 @@
 use std::io::Write;
 
 use eyre::{Result, WrapErr};
-use itertools::Itertools;
 
 mod flags;
 
@@ -64,7 +63,7 @@ fn update(flags: &flags::Second) -> Result<()> {
                 .get(&aoc::Level::Second)
                 .map(|s| s.as_str())
                 .ok_or_else(|| eyre::eyre!("could not find second level"))?
-                .replace("\n", "\n//! ");
+                .replace('\n', "\n//! ");
 
             string.push_str(add_lines);
             string.push('\n');
@@ -137,7 +136,7 @@ fn generate_day(flags: &flags::NewDay) -> Result<()> {
                 .get(&aoc::Level::First)
                 .map(|s| s.as_str())
                 .unwrap_or("")
-                .replace("\n", "\n//! "),
+                .replace('\n', "\n//! "),
         );
 
         let depth = dir_entry.depth();

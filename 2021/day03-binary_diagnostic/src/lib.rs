@@ -181,7 +181,7 @@ impl Solver<Year2021, Day3, Part2> for Solution {
                 let _ = oxygen_items.drain_filter(|n| get_bit_at(*n as u32, index as u8) == remove);
                 tracing::debug!(
                     "{}",
-                    oxygen_items.iter().map(|n| format!("{:b}", n)).join(" ")
+                    oxygen_items.iter().map(|n| format!("{n:b}")).join(" ")
                 );
             }
 
@@ -270,7 +270,7 @@ fn test_solution_second() -> Result<(), Report> {
 fn solve_solution() -> Result<(), Report> {
     aoc::test_util::init();
     aoc::Aoc::solve::<Solution, Year2021, Day3, Part1>()
-        .map(|s| println!(":: ⭐Solution found⭐ ::\n{}", s))
+        .map(|s| println!(":: ⭐Solution found⭐ ::\n{s}"))
 }
 
 #[test]
@@ -278,5 +278,5 @@ fn solve_solution() -> Result<(), Report> {
 fn solve_solution_second() -> Result<(), Report> {
     aoc::test_util::init();
     aoc::Aoc::solve::<Solution, Year2021, Day3, Part2>()
-        .map(|s| println!(":: ⭐Solution found⭐ ::\n{}", s))
+        .map(|s| println!(":: ⭐Solution found⭐ ::\n{s}"))
 }

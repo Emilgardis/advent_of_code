@@ -81,8 +81,6 @@
 //!
 //! *
 
-use std::collections::BTreeSet;
-
 use aoc::{parts::*, Solver};
 use eyre::Report;
 use itertools::Itertools;
@@ -200,7 +198,7 @@ fn test_solution_second() -> Result<(), Report> {
 fn solve_solution() -> Result<(), Report> {
     aoc::test_util::init();
     aoc::Aoc::solve::<Solution, Year2022, Day4, Part1>()
-        .map(|s| println!(":: ⭐Solution found⭐ ::\n{}", s))
+        .map(|s| println!(":: ⭐Solution found⭐ ::\n{s}"))
 }
 
 #[test]
@@ -208,5 +206,5 @@ fn solve_solution() -> Result<(), Report> {
 fn solve_solution_second() -> Result<(), Report> {
     aoc::test_util::init();
     aoc::Aoc::solve::<Solution, Year2022, Day4, Part2>()
-        .map(|s| println!(":: ⭐Solution found⭐ ::\n{}", s))
+        .map(|s| println!(":: ⭐Solution found⭐ ::\n{s}"))
 }

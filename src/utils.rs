@@ -102,6 +102,7 @@ fn test_double_disjoint_mut() {
     let mut v: Vec<Vec<u8>> = vec![vec![1, 2, 3, 4], vec![4, 3, 2, 1]];
     assert!(v.double_disjoint_mut([(0, 4), (1, 0)]).is_err());
     assert!(v.double_disjoint_mut([(0, 0), (4, 0)]).is_err());
-    v.double_disjoint_mut([(0, 0), (0, 3), (1,0), (1,1), (1,2)]).unwrap();
+    v.double_disjoint_mut([(0, 0), (0, 3), (1, 0), (1, 1), (1, 2)])
+        .unwrap();
     assert!(v.double_disjoint_mut([(0, 4), (0, 4)]).is_err());
 }

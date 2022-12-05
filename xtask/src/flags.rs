@@ -43,8 +43,6 @@ pub struct Second {
 }
 
 impl App {
-    pub const HELP: &'static str = Self::HELP_;
-
     #[allow(dead_code)]
     pub fn from_env() -> xflags::Result<Self> {
         Self::from_env_()

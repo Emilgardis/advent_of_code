@@ -45,8 +45,8 @@ impl Aoc {
         let file = std::fs::File::open(&file_path)
             .wrap_err(format!("could not open aoc file on {file_path:?}"))?;
         dbg!(serde_json::from_reader(&file)
-                    .wrap_err("when trying to deserialize aoc")
-                    .map_err(Into::into))
+            .wrap_err("when trying to deserialize aoc")
+            .map_err(Into::into))
     }
 
     pub fn solve<S: Solver<YEAR, DAY, PART>, const YEAR: u32, const DAY: u32, const PART: u32>(

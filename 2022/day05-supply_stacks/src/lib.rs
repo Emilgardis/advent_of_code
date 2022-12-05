@@ -87,9 +87,79 @@
 //!
 //! *After the rearrangement procedure completes, what crate ends up on top of each stack?*
 //!
-//! To begin, [get your puzzle input](5/input).
+//! Your puzzle answer was `QNNTGTPFN`.
+//!
+//! The first half of this puzzle is complete! It provides one gold star: \*
+//!
+//! \--- Part Two ---
+//! ----------
+//!
+//! As you watch the crane operator expertly rearrange the crates, you notice the process isn't following your prediction.
+//!
+//! Some mud was covering the writing on the side of the crane, and you quickly wipe it away. The crane isn't a CrateMover 9000 - it's a *CrateMover 9001*.
+//!
+//! The CrateMover 9001 is notable for many new and exciting features: air conditioning, leather seats, an extra cup holder, and *the ability to pick up and move multiple crates at once*.
+//!
+//! Again considering the example above, the crates begin in the same configuration:
+//!
+//! ```
+//!     [D]
+//! [N] [C]
+//! [Z] [M] [P]
+//!  1   2   3
+//!
+//! ```
+//!
+//! Moving a single crate from stack 2 to stack 1 behaves the same as before:
+//!
+//! ```
+//! [D]
+//! [N] [C]
+//! [Z] [M] [P]
+//!  1   2   3
+//!
+//! ```
+//!
+//! However, the action of moving three crates from stack 1 to stack 3 means that those three moved crates *stay in the same order*, resulting in this new configuration:
+//!
+//! ```
+//!         [D]
+//!         [N]
+//!     [C] [Z]
+//!     [M] [P]
+//!  1   2   3
+//!
+//! ```
+//!
+//! Next, as both crates are moved from stack 2 to stack 1, they *retain their order* as well:
+//!
+//! ```
+//!         [D]
+//!         [N]
+//! [C]     [Z]
+//! [M]     [P]
+//!  1   2   3
+//!
+//! ```
+//!
+//! Finally, a single crate is still moved from stack 1 to stack 2, but now it's crate `C` that gets moved:
+//!
+//! ```
+//!         [D]
+//!         [N]
+//!         [Z]
+//! [M] [C] [P]
+//!  1   2   3
+//!
+//! ```
+//!
+//! In this example, the CrateMover 9001 has put the crates in a totally different order: `*MCD*`.
+//!
+//! Before the rearrangement process finishes, update your simulation so that the Elves know where they should stand to be ready to unload the final supplies. *After the rearrangement procedure completes, what crate ends up on top of each stack?*
 //!
 //! Answer:
+//!
+//! Although it hasn't changed, you can still [get your puzzle input](5/input).
 //! <!---ENDOFDESCRIPTION--->
 //! ## Notes
 //!
@@ -124,6 +194,25 @@ impl StackIndex {
             column: self.column,
         }
     }
+    /// Get the crate above this crate
+    pub fn get_below(&self) -> Option<Self> {
+        Some(Self {
+            row: self.row.checked_sub(1)?,
+            column: self.column,
+        })
+    }
+    pub fn get_under(&self, amount: u32) -> Option<Self> {
+        Some(Self {
+            row: self.row.checked_sub(amount as usize)?,
+            column: self.column,
+        })
+    }
+    pub fn get_over(&self, amount: u32) -> Self {
+        Self {
+            row: self.row + amount as usize,
+            column: self.column,
+        }
+    }
 }
 
 impl<'a> Stacks<'a> {
@@ -144,6 +233,42 @@ impl<'a> Stacks<'a> {
 
         let [from, to] = self.get_mut([from, to])?;
         std::mem::swap(from.1, to.1);
+        Ok(())
+    }
+
+    pub fn relocate_multiple(
+        &mut self,
+        amount: u32,
+        from: usize,
+        to: usize,
+    ) -> Result<(), eyre::Report> {
+        let from = self
+            .find_top(from)
+            .ok_or_else(|| eyre::eyre!("no crate found in {from}"))?;
+        let mut indicies = Vec::from_iter((0..amount).filter_map(|i| from.get_under(i)));
+        let amount = indicies.len();
+
+        let to = self
+            .find_top(to)
+            .map(|s| s.get_above())
+            .unwrap_or_else(|| StackIndex { row: 0, column: to });
+        indicies.extend((0..amount).map(|i| to.get_over(i as u32)).rev());
+
+        assert!(indicies[..amount]
+            .iter()
+            .map(|from| self.get(*from))
+            .all(|k| k.is_some()));
+
+        assert!(indicies[amount..]
+            .iter()
+            .map(|to| self.get(*to))
+            .all(|k| k.is_none()));
+
+        let mut krates = self.get_mut_dumb(&indicies)?;
+        let (a, b) = krates.split_at_mut(amount);
+        for (from, to) in a.iter_mut().zip(b.iter_mut()) {
+            std::mem::swap(from.1, to.1);
+        }
         Ok(())
     }
 
@@ -182,6 +307,52 @@ impl<'a> Stacks<'a> {
             Some(opt) => opt,
             None => &None,
         }
+    }
+
+    pub fn get_mut_dumb(
+        &mut self,
+        indices: impl AsRef<[StackIndex]>,
+    ) -> Result<Vec<(StackIndex, &mut Option<Krate<'a>>)>, eyre::Report> {
+        let indices = indices.as_ref();
+        if !indices.iter().all_unique() {
+            eyre::bail!("entries must be unique, found duplicate")
+        }
+        for idx in indices {
+            self.make_available(*idx)?;
+        }
+
+        let mut arr: Vec<_> = self
+            .arrays
+            .iter_mut()
+            .enumerate()
+            .flat_map(|(row, column)| {
+                column
+                    .iter_mut()
+                    .enumerate()
+                    .filter_map(move |(column, krate)| {
+                        if indices.iter().any(|i| i.row == row && i.column == column) {
+                            Some((StackIndex { row, column }, krate))
+                        } else {
+                            None
+                        }
+                    })
+            })
+            .collect();
+
+        #[allow(clippy::needless_range_loop)]
+        for idx in 0..indices.len() {
+            let Some(pos) = arr.iter().position(|(i, _)| *i == indices[idx]) else {
+                eyre::bail!("oops")
+            };
+            if pos != idx {
+                let (pos, idx) = if pos > idx { (idx, pos) } else { (pos, idx) };
+                let (a, b) = arr.split_at_mut(idx);
+
+                std::mem::swap(&mut a[pos], &mut b[0]);
+            }
+        }
+
+        Ok(arr)
     }
 
     pub fn get_mut<const N: usize>(
@@ -229,14 +400,6 @@ impl<'a> Stacks<'a> {
         }
 
         Ok(arr)
-        // self.make_available(idx)?;
-        // let Some(row) = self.arrays.get_mut(idx.row) else {
-        //     eyre::bail!("no such row found")
-        // };
-        // match row.get_mut(idx.column) {
-        //     Some(opt) => Ok(opt),
-        //     None => unreachable!(),
-        // }
     }
 
     pub fn make_available(
@@ -477,7 +640,25 @@ impl Solver<Year2022, Day5, Part2> for Solution {
     fn solve(
         (stacks, instructions): &(Stacks<'_>, Vec<Instruction>),
     ) -> Result<Self::Output, Report> {
-        todo!()
+        use std::fmt::Write;
+        let mut stacks = stacks.clone();
+        for instruction in instructions {
+            stacks.relocate_multiple(
+                instruction.amount,
+                instruction.from - 1,
+                instruction.to - 1,
+            )?;
+            println!("{stacks}");
+        }
+        let mut res = String::new();
+        for i in 0..stacks.len() {
+            write!(
+                &mut res,
+                "{}",
+                stacks.get_top(i).ok_or_else(|| eyre::eyre!("noo!"))?.0
+            )?;
+        }
+        Ok(res)
     }
 }
 
@@ -509,12 +690,19 @@ move 1 from 1 to 2
 fn test_solution_second() -> Result<(), Report> {
     aoc::test_util::init();
     let input = r#"
-0
-    "#
-    .trim();
+    [D]
+[N] [C]
+[Z] [M] [P]
+1   2   3
+
+move 1 from 2 to 1
+move 3 from 1 to 3
+move 2 from 2 to 1
+move 1 from 1 to 2
+    "#;
     assert_eq!(
         aoc::solve_with_input::<Solution, Year2022, Day5, Part2>(input)?,
-        "a"
+        "MCD"
     );
     Ok(())
 }

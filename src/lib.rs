@@ -1,9 +1,10 @@
+#![feature(get_many_mut, slice_ptr_get)]
 pub mod aoc;
 pub mod parts;
 pub mod test_util;
 pub mod utils;
 
-pub use aoc::{Aoc, Level};
+pub use crate::aoc::{Aoc, Level};
 pub use utils::*;
 use eyre::Report;
 

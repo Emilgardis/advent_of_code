@@ -1,76 +1,107 @@
 use itertools::Itertools;
-pub trait ArrayTools {
-    type Item;
 
+pub trait ArrayTools<T> {
     fn disjoint_mut<const N: usize>(
         &mut self,
         indices: [usize; N],
-    ) -> Result<[&mut Self::Item; N], eyre::Report>;
+    ) -> Result<[&mut T; N], eyre::Report>;
 }
 
-impl<T> ArrayTools for [T] {
-    type Item = T;
-
+impl<T> ArrayTools<T> for [T] {
     /// Get multiple mutable references to elements in an array
     fn disjoint_mut<const N: usize>(
         &mut self,
         indices: [usize; N],
-    ) -> Result<[&mut Self::Item; N], eyre::Report> {
-        if !indices.iter().all_unique() {
-            eyre::bail!("entries must be unique, found duplicate")
-        }
-        if !indices.iter().all(|&i| i < self.len()) {
-            eyre::bail!("entries must be unique, found duplicate")
-        }
-
-        let ptr = self.as_mut_ptr();
-        // Safety:
-        // This is safe because we index the pointer having checked that
-        // 1. The indices are unique, so there is only one mutable reference for each index
-        // 2. The indices are within range, so the pointer arithmetic will not overflow
-        // 3. The slice is not empty, so the pointer is not null
-        let arr: [_; N] = indices.map(|i| unsafe { &mut *ptr.add(i) });
-
-        Ok(arr)
+    ) -> Result<[&mut T; N], eyre::Report> {
+        self.get_many_mut(indices).map_err(Into::into)
     }
 }
 
-#[cfg(test)]
+/// Takes indices into e.g a `Vec<Vec<T>>` and returns them mutably
+///
+/// # Examples
+///
+/// ```rust
+/// use aoc::utils::ArrayArrayTools;
+///
+/// let mut v: Vec<Vec<u8>> = vec![vec![1,2,3,4], vec![4,3,2,1]];
+/// let [a, b] = v.double_disjoint_mut([(0,0), (1,0)]).unwrap();
+/// std::mem::swap(a,b);
+/// assert_eq!(v, vec![vec![4,2,3,4], vec![1,3,2,1]]);
+/// ```
+pub trait ArrayArrayTools<C, T> {
+    fn double_disjoint_mut<const N: usize>(
+        &mut self,
+        indices: [(usize, usize); N],
+    ) -> Result<[&mut T; N], eyre::Report>;
+}
+
+impl<C, T> ArrayArrayTools<C, T> for [C]
+where
+    C: AsMut<[T]> + AsRef<[T]>,
+{
+    fn double_disjoint_mut<const N: usize>(
+        &mut self,
+        indices: [(usize, usize); N],
+    ) -> Result<[&mut T; N], eyre::Report> {
+        fn get_many_check_valid(indices: impl Iterator<Item = usize> + Clone, len: usize) -> bool {
+            let mut valid = true;
+            for (i, idx) in indices.clone().enumerate() {
+                valid &= idx < len;
+                for idx2 in indices.clone().take(i) {
+                    valid &= idx != idx2;
+                }
+            }
+            valid
+        }
+
+        let mut valid = true;
+        for &(i, j) in indices.iter().unique_by(|(i, _)| i) {
+            let Some(len) = self.get(i).map(|s| s.as_ref().len()) else {
+                eyre::bail!("index {i}, {j} out of bound")
+            };
+            valid &= get_many_check_valid(
+                indices
+                    .iter()
+                    .filter(|(l, _)| i == *l)
+                    .map(|(_, k)| k)
+                    .copied(),
+                len,
+            );
+        }
+        if !valid {
+            eyre::bail!("invalid index found")
+        }
+
+        let mut arr: std::mem::MaybeUninit<[&mut T; N]> = std::mem::MaybeUninit::uninit();
+
+        // SAFETY: We expect `indices` to contain disjunct values that are
+        // in bounds of all slices in self.
+        let arr_ptr = arr.as_mut_ptr();
+        unsafe {
+            for i in 0..N {
+                let idx = *indices.get_unchecked(i);
+
+                let slice: *mut [T] = self[idx.0].as_mut();
+
+                *(*arr_ptr).get_unchecked_mut(i) = &mut *slice.get_unchecked_mut(idx.1);
+            }
+            Ok(arr.assume_init())
+        }
+    }
+}
+
 #[test]
-fn test_disjoint_mut() {
-    let mut v = vec![1, 2, 3, 4, 5];
+fn test_double_disjoint_mut() {
+    let mut v: Vec<Vec<u8>> = vec![vec![1, 2, 3, 4], vec![4, 3, 2, 1]];
+    assert!(v.double_disjoint_mut([(0, 0), (0, 1)]).is_ok());
+    let [a, b] = v.double_disjoint_mut([(0, 0), (1, 0)]).unwrap();
+    std::mem::swap(a, b);
+    assert_eq!(v, vec![vec![4, 2, 3, 4], vec![1, 3, 2, 1]]);
 
-    // Test error when provided with duplicate indices
-    let result = v.disjoint_mut([1, 2, 1]).unwrap_err();
-    assert_eq!(
-        result.to_string(),
-        "entries must be unique, found duplicate"
-    );
-
-    // Test error when provided with indices that are out of bounds
-    let result = v.disjoint_mut([1, 2, 6]).unwrap_err();
-    assert_eq!(
-        result.to_string(),
-        "entries must be unique, found duplicate"
-    );
-
-    // Test valid indices
-    let result = v.disjoint_mut([1, 2, 3]).unwrap();
-    assert_eq!(result, [&mut 2, &mut 3, &mut 4]);
-
-    // Test ascending order indices
-    let result = v.disjoint_mut([0, 1, 2]).unwrap();
-    assert_eq!(result, [&mut 1, &mut 2, &mut 3]);
-
-    // Test descending order indices
-    let result = v.disjoint_mut([2, 1, 0]).unwrap();
-    assert_eq!(result, [&mut 3, &mut 2, &mut 1]);
-
-    // Test single index
-    let result = v.disjoint_mut([1]).unwrap();
-    assert_eq!(result, [&mut 2]);
-
-    // Test maximum allowed number of indices
-    let result = v.disjoint_mut([0, 1, 2, 3, 4]).unwrap();
-    assert_eq!(result, [&mut 1, &mut 2, &mut 3, &mut 4, &mut 5]);
+    let mut v: Vec<Vec<u8>> = vec![vec![1, 2, 3, 4], vec![4, 3, 2, 1]];
+    assert!(v.double_disjoint_mut([(0, 4), (1, 0)]).is_err());
+    assert!(v.double_disjoint_mut([(0, 0), (4, 0)]).is_err());
+    v.double_disjoint_mut([(0, 0), (0, 3), (1,0), (1,1), (1,2)]).unwrap();
+    assert!(v.double_disjoint_mut([(0, 4), (0, 4)]).is_err());
 }

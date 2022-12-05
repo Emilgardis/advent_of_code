@@ -141,8 +141,10 @@ impl Solver<Year2022, Day4, Part2> for Solution {
         for (a, b) in input {
             let a = a.0..=a.1;
             let b = b.0..=b.1;
-            if a.contains(b.start()) || a.contains(b.end())
-                || b.contains(a.start()) || b.contains(a.end())
+            if a.contains(b.start())
+                || a.contains(b.end())
+                || b.contains(a.start())
+                || b.contains(a.end())
             {
                 count += 1;
             }

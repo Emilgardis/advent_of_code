@@ -1,1 +1,4 @@
 wrap_comments = true
+condense_wildcard_suffixes = true
+newline_style = "Unix"
+brace_style = "PreferSameLine"

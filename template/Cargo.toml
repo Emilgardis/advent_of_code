@@ -11,3 +11,10 @@ eyre = "0.6"
 tracing = "0.1"
 itertools = "0.10"
 color-eyre = "0.6.2"
+
+[dev-dependencies]
+criterion = "0.4.0"
+
+[[bench]]
+name = "solution_crit"
+harness = false

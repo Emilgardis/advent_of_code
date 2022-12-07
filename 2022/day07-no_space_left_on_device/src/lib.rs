@@ -325,7 +325,12 @@ impl Solver<Year2022, Day7, Part2> for Solution {
 
         let rem = 70000000 - size;
         let toremove = 30000000 - rem;
-        Ok(dirs.values().filter(|&&s| s >= toremove).copied().min().unwrap())
+        Ok(dirs
+            .values()
+            .filter(|&&s| s >= toremove)
+            .copied()
+            .min()
+            .unwrap())
     }
 }
 

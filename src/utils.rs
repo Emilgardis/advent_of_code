@@ -91,6 +91,58 @@ where
     }
 }
 
+// https://discord.com/channels/273534239310479360/386246790565068811/1049645867981881364
+///
+///
+/// # Examples
+///
+/// Get the position of the first distinct window of size 4.
+///
+/// ```rust
+/// use aoc::utils::rolling_distinct_windows;
+/// assert_eq!(rolling_distinct_windows(&vec![1,2,1,4,1,2,3], 4).position(|(_, c)| c == 4).unwrap(),3);
+/// ```
+pub fn rolling_distinct_windows(s: &[u8], n: usize) -> impl Iterator<Item = (&[u8], usize)> {
+    let mut in_window = [0; 256];
+    let mut count = 0;
+    (0..s.len()).filter_map(move |i| {
+        if i >= n {
+            in_window[s[i - n] as usize] -= 1;
+            count -= (in_window[s[i - n] as usize] == 0) as usize;
+        }
+        in_window[s[i] as usize] += 1;
+        count += (in_window[s[i] as usize] == 1) as usize;
+        (i >= n - 1).then(|| (&s[i + 1 - n..i + 1], count))
+    })
+}
+
+pub trait RollingDistinctWindows {
+    type Ret<'a>
+    where
+        Self: 'a;
+
+    fn rolling_distinct_windows(&self, n: usize) -> Self::Ret<'_>;
+}
+
+impl RollingDistinctWindows for [u8] {
+    type Ret<'a> = impl Iterator<Item = (&'a [u8], usize)>;
+
+    fn rolling_distinct_windows(&self, n: usize) -> Self::Ret<'_> {
+        let s = self;
+        let mut in_window = [0; u8::MAX as usize + 1];
+        let mut count = 0;
+        (0..s.len()).filter_map(move |i| {
+            if i >= n {
+                in_window[s[i - n] as usize] -= 1;
+                count -= (in_window[s[i - n] as usize] == 0) as usize;
+            }
+            in_window[s[i] as usize] += 1;
+            count += (in_window[s[i] as usize] == 1) as usize;
+            (i >= n - 1).then(|| (&s[i + 1 - n..i + 1], count))
+        })
+    }
+}
+
 #[test]
 fn test_double_disjoint_mut() {
     let mut v: Vec<Vec<u8>> = vec![vec![1, 2, 3, 4], vec![4, 3, 2, 1]];
@@ -106,3 +158,7 @@ fn test_double_disjoint_mut() {
         .unwrap();
     assert!(v.double_disjoint_mut([(0, 4), (0, 4)]).is_err());
 }
+
+pub trait IteratorExt: Iterator {}
+
+impl<T: ?Sized> IteratorExt for T where T: Iterator {}

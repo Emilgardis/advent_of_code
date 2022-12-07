@@ -72,12 +72,12 @@ fn test_solution_second() -> Result<(), Report> {
 #[ignore]
 fn solve_solution() -> Result<(), Report> {
     aoc::test_util::init();
-    aoc::Aoc::solve::<Solution, Year{{year}}, Day{{day}}, Part1>().map(|s| {println!(":: ⭐Solution found⭐ ::\n{}", s)})
+    aoc::Aoc::solve::<Solution, Year{{year}}, Day{{day}}, Part1>().map(|s| {println!(":: ⭐Solution found⭐ ::\n{s}")})
 }
 
 #[test]
 #[ignore]
 fn solve_solution_second() -> Result<(), Report>{
     aoc::test_util::init();
-    aoc::Aoc::solve::<Solution, Year{{year}}, Day{{day}}, Part2>().map(|s| {println!(":: ⭐Solution found⭐ ::\n{}", s)})
+    aoc::Aoc::solve::<Solution, Year{{year}}, Day{{day}}, Part2>().map(|s| {println!(":: ⭐Solution found⭐ ::\n{s}")})
 }

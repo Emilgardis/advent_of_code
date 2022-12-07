@@ -1,4 +1,4 @@
-#![feature(get_many_mut, slice_ptr_get)]
+#![feature(get_many_mut, slice_ptr_get, type_alias_impl_trait)]
 pub mod aoc;
 pub mod parts;
 pub mod test_util;

@@ -269,7 +269,6 @@ impl Solver<Year2022, Day7, Part1> for Solution {
                 },
             }
         }
-        dbg!(&dirs);
         Ok(dirs.values().filter(|&&size| size < 100000).copied().sum())
     }
 }

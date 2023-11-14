@@ -89,16 +89,13 @@ fn update(flags: &flags::Second) -> Result<()> {
 fn generate_day(flags: &flags::NewDay) -> Result<()> {
     use inflections::case::to_snake_case;
     let sh = xshell::Shell::new()?;
-    let (day, year);
-    // First, checkout the day
-    let (day, year) = if let (Some(day), Some(year)) = (&flags.day, &flags.year) {
-        (day.as_str(), year.as_str())
-    } else {
-        let date = time::OffsetDateTime::now_utc();
-        day = date.day().to_string();
-        year = date.year().to_string();
-        (day.as_str(), year.as_str())
-    };
+    let date = time::OffsetDateTime::now_utc();
+    let cur_day = date.day().to_string();
+    let cur_year = date.year().to_string();
+    let (day, year) = (
+        flags.day.as_deref().unwrap_or(&cur_day),
+        flags.year.as_deref().unwrap_or(&cur_year),
+    );
     xshell::cmd!(sh, "aocf checkout --day {day} --year {year}").run()?;
     xshell::cmd!(sh, "aocf fetch").run()?;
 
@@ -109,7 +106,7 @@ fn generate_day(flags: &flags::NewDay) -> Result<()> {
     // get the template files
     let template_dir = root_dir.join("template/.");
 
-    let files = walkdir::WalkDir::new(&template_dir);
+    let files = walkdir::WalkDir::new(template_dir);
 
     let day_dir = root_dir.join(format!(
         "{year}/day{day:0>2}-{}",

@@ -242,7 +242,7 @@ impl<'a> Stacks<'a> {
 
     pub fn get(&self, idx: StackIndex) -> Option<&Krate<'a>> {
         let Some(stack) = self.arrays.get(idx.stack_num) else {
-            return None
+            return None;
         };
         stack.get(idx.position)
     }
@@ -251,7 +251,12 @@ impl<'a> Stacks<'a> {
         let mut arranged = vec![];
         let mut iter = stacks.lines().rev();
         let total: u32 = if let Some(sum) = iter.next() {
-            let Some(total) = sum.trim().rsplit_once(' ').map(|s| s.1.parse()).transpose()? else {
+            let Some(total) = sum
+                .trim()
+                .rsplit_once(' ')
+                .map(|s| s.1.parse())
+                .transpose()?
+            else {
                 eyre::bail!("invalid input found")
             };
             total
@@ -353,19 +358,19 @@ impl FromStr for Instruction {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let Some(rest) = s.strip_prefix("move ") else {
-            return Err(InstructionParseError::invalid(s) );
+            return Err(InstructionParseError::invalid(s));
         };
         let Some((amount, rest)) = rest.split_once(' ') else {
-            return Err(InstructionParseError::invalid(rest) );
+            return Err(InstructionParseError::invalid(rest));
         };
         let Some(rest) = rest.strip_prefix("from ") else {
-            return Err(InstructionParseError::invalid(rest) );
+            return Err(InstructionParseError::invalid(rest));
         };
         let Some((from, rest)) = rest.split_once(' ') else {
-            return Err(InstructionParseError::invalid(rest) );
+            return Err(InstructionParseError::invalid(rest));
         };
         let Some(to) = rest.strip_prefix("to ") else {
-            return Err(InstructionParseError::invalid(rest) );
+            return Err(InstructionParseError::invalid(rest));
         };
 
         Ok(Instruction {

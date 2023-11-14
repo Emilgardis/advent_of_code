@@ -83,6 +83,7 @@ fn update(flags: &flags::Second) -> Result<()> {
         .write(true)
         .open(&path)?;
     file.write_all(string.as_bytes())?;
+    xshell::cmd!(sh, "cargo fmt -- {day_dir}").run()?;
     Ok(())
 }
 
@@ -161,6 +162,7 @@ fn generate_day(flags: &flags::NewDay) -> Result<()> {
             .open(new_file)?
             .write_all(contents.as_bytes())?;
     }
+    xshell::cmd!(sh, "cargo fmt -- {day_dir}").run()?;
 
     Ok(())
 }

@@ -1,6 +1,8 @@
 //! Advent of code 2020 3
 //!
-//! https://adventofcode.com/2020/day/3
+//!! Link: <https://adventofcode.com/2020/day/3>
+//!
+//! Good luck!
 //!
 //! ## Description
 //! <!---STARTOFDESCRIPTION--->

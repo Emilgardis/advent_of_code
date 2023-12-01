@@ -1,6 +1,8 @@
 //! Advent of code 2022 7
 //!
-//! https://adventofcode.com/2022/day/7
+//!! Link: <https://adventofcode.com/2022/day/7>
+//!
+//! Good luck!
 //!
 //! ## Description
 //! <!---STARTOFDESCRIPTION--->

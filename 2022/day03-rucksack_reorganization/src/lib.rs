@@ -1,6 +1,8 @@
 //! Advent of code 2022 3
 //!
-//! https://adventofcode.com/2022/day/3
+//!! Link: <https://adventofcode.com/2022/day/3>
+//!
+//! Good luck!
 //!
 //! ## Description
 //! <!---STARTOFDESCRIPTION--->

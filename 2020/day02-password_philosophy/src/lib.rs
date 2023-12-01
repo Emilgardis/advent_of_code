@@ -1,6 +1,8 @@
 //! Advent of code 2020 2
 //!
-//! https://adventofcode.com/2020/day/2
+//!! Link: <https://adventofcode.com/2020/day/2>
+//!
+//! Good luck!
 //!
 //! ## Description
 //! <!---STARTOFDESCRIPTION--->

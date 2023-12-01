@@ -1,7 +1,9 @@
 #![feature(drain_filter)]
 //! Advent of code 2021 3
 //!
-//! https://adventofcode.com/2021/day/3
+//!! Link: <https://adventofcode.com/2021/day/3>
+//!
+//! Good luck!
 //!
 //! ## Description
 //! <!---STARTOFDESCRIPTION--->

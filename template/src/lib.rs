@@ -1,6 +1,8 @@
 //! Advent of code {{year}} {{day}}
 //!
-//! https://adventofcode.com/{{year}}/day/{{day}}
+//! Link: <https://adventofcode.com/{{year}}/day/{{day}}>
+//!
+//! Good luck!
 //!
 //! ## Description
 //! <!---STARTOFDESCRIPTION--->

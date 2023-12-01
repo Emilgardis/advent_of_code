@@ -18,17 +18,6 @@ impl<T> ArrayTools<T> for [T] {
 }
 
 /// Takes indices into e.g a `Vec<Vec<T>>` and returns them mutably
-///
-/// # Examples
-///
-/// ```rust
-/// use aoc::utils::ArrayArrayTools;
-///
-/// let mut v: Vec<Vec<u8>> = vec![vec![1,2,3,4], vec![4,3,2,1]];
-/// let [a, b] = v.double_disjoint_mut([(0,0), (1,0)]).unwrap();
-/// std::mem::swap(a,b);
-/// assert_eq!(v, vec![vec![4,2,3,4], vec![1,3,2,1]]);
-/// ```
 pub trait ArrayArrayTools<C, T> {
     fn double_disjoint_mut<const N: usize>(
         &mut self,

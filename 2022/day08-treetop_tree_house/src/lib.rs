@@ -1,6 +1,8 @@
 //! Advent of code 2022 8
 //!
-//! https://adventofcode.com/2022/day/8
+//!! Link: <https://adventofcode.com/2022/day/8>
+//!
+//! Good luck!
 //!
 //! ## Description
 //! <!---STARTOFDESCRIPTION--->

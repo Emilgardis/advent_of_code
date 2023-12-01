@@ -1,7 +1,9 @@
 #![feature(iter_array_chunks)]
 //! Advent of code 2022 6
 //!
-//! https://adventofcode.com/2022/day/6
+//!! Link: <https://adventofcode.com/2022/day/6>
+//!
+//! Good luck!
 //!
 //! ## Description
 //! <!---STARTOFDESCRIPTION--->

@@ -1,6 +1,8 @@
 //! Advent of code 2022 5
 //!
-//! https://adventofcode.com/2022/day/5
+//!! Link: <https://adventofcode.com/2022/day/5>
+//!
+//! Good luck!
 //!
 //! ## Description
 //! <!---STARTOFDESCRIPTION--->

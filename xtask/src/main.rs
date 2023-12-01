@@ -140,7 +140,7 @@ fn generate_day(flags: &flags::NewDay) -> Result<()> {
                 .brief
                 .get(&aoc::Level::First)
                 .map(|s| s.as_str())
-                .unwrap_or("")
+                .expect("no first brief found")
                 .replace('\n', "\n//! "),
         );
 

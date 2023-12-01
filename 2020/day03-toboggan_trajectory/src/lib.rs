@@ -119,14 +119,13 @@
 use aoc::{parts::*, Solver};
 use eyre::Report;
 
-const SLOPES: &[Slope] =
-    &[
-        Slope { right: 1, down: 1 },
-        Slope { right: 3, down: 1 },
-        Slope { right: 5, down: 1 },
-        Slope { right: 7, down: 1 },
-        Slope { right: 1, down: 2 },
-    ];
+const SLOPES: &[Slope] = &[
+    Slope { right: 1, down: 1 },
+    Slope { right: 3, down: 1 },
+    Slope { right: 5, down: 1 },
+    Slope { right: 7, down: 1 },
+    Slope { right: 1, down: 2 },
+];
 
 #[derive(Debug)]
 pub struct Slope {

@@ -41,7 +41,10 @@ fn update(flags: &flags::Second) -> Result<()> {
 
     let data = aoc::Aoc::on_root_dir(&root_dir, &year, &day)?;
 
-    let day_dir = root_dir.join(format!("{year}/day{day:0>2}-{}", to_snake_case(&data.title)));
+    let day_dir = root_dir.join(format!(
+        "{year}/day{day:0>2}-{}",
+        to_snake_case(&data.title)
+    ));
     let path = day_dir.join("src/lib.rs");
 
     let mut string = String::new();
@@ -74,12 +77,11 @@ fn update(flags: &flags::Second) -> Result<()> {
             string.push('\n');
         }
     }
-    let mut file =
-        std::fs::OpenOptions::new()
-            .create(true)
-            .truncate(true)
-            .write(true)
-            .open(&path)?;
+    let mut file = std::fs::OpenOptions::new()
+        .create(true)
+        .truncate(true)
+        .write(true)
+        .open(&path)?;
     file.write_all(string.as_bytes())?;
     xshell::cmd!(sh, "cargo fmt -- {day_dir}").run()?;
     Ok(())
@@ -97,7 +99,6 @@ fn generate_day(flags: &flags::NewDay) -> Result<()> {
     );
     xshell::cmd!(sh, "aocf checkout --day {day} --year {year}").run()?;
     xshell::cmd!(sh, "aocf fetch").run()?;
-    xshell::cmd!(sh, "aocf input").output()?;
 
     // import the data.
     let root_dir = aoc::aoc::find_root()?;
@@ -110,7 +111,7 @@ fn generate_day(flags: &flags::NewDay) -> Result<()> {
 
     let day_dir = root_dir.join(format!(
         "{year}/day{day:0>2}-{}",
-        to_snake_case(&data.title).replace(['?', '!'], "")
+        to_snake_case(&data.title)
     ));
 
     // Now, generate the template
@@ -120,18 +121,10 @@ fn generate_day(flags: &flags::NewDay) -> Result<()> {
         if !path.is_file() {
             continue;
         }
-        if dir_entry.file_name() == ".DS_Store" {
-            continue;
-        }
-
-        let contents = std::fs::read_to_string(path)
-            .with_context(|| format!("could not read file {path:?}"))?;
+        let contents = std::fs::read_to_string(path).context("could not real file {path:?}")?;
         let contents = contents.replace("{{year}}", year);
         let contents = contents.replace("{{day}}", day);
-        let contents = contents.replace(
-            "{{title_snake}}",
-            &to_snake_case(&data.title).replace(['?', '!'], ""),
-        );
+        let contents = contents.replace("{{title_snake}}", &to_snake_case(&data.title));
         let contents = contents.replace("{{title}}", &data.title);
         let contents = contents.replace("{{level}}", &data.level.to_string());
         let contents = contents.replace(
@@ -169,7 +162,7 @@ fn generate_day(flags: &flags::NewDay) -> Result<()> {
             .open(new_file)?
             .write_all(contents.as_bytes())?;
     }
-    xshell::cmd!(sh, "cargo fmt").run()?;
+    xshell::cmd!(sh, "cargo fmt -- {day_dir}").run()?;
 
     Ok(())
 }

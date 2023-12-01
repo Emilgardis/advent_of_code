@@ -43,7 +43,7 @@ fn update(flags: &flags::Second) -> Result<()> {
 
     let day_dir = root_dir.join(format!(
         "{year}/day{day:0>2}-{}",
-        to_snake_case(&data.title)
+        to_snake_case(&data.title).replace(['?', '!'], "")
     ));
     let path = day_dir.join("src/lib.rs");
 
@@ -83,7 +83,7 @@ fn update(flags: &flags::Second) -> Result<()> {
         .write(true)
         .open(&path)?;
     file.write_all(string.as_bytes())?;
-    xshell::cmd!(sh, "cargo fmt -- {day_dir}").run()?;
+    xshell::cmd!(sh, "cargo fmt").run()?;
     Ok(())
 }
 

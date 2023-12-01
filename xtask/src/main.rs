@@ -97,6 +97,7 @@ fn generate_day(flags: &flags::NewDay) -> Result<()> {
     );
     xshell::cmd!(sh, "aocf checkout --day {day} --year {year}").run()?;
     xshell::cmd!(sh, "aocf fetch").run()?;
+    xshell::cmd!(sh, "aocf input").output()?;
 
     // import the data.
     let root_dir = aoc::aoc::find_root()?;
@@ -107,7 +108,10 @@ fn generate_day(flags: &flags::NewDay) -> Result<()> {
 
     let files = walkdir::WalkDir::new(template_dir);
 
-    let day_dir = root_dir.join(format!("{year}/day{day:0>2}-{}", to_snake_case(&data.title)));
+    let day_dir = root_dir.join(format!(
+        "{year}/day{day:0>2}-{}",
+        to_snake_case(&data.title).replace(['?', '!'], "")
+    ));
 
     // Now, generate the template
     for dir_entry in files {
@@ -120,10 +124,14 @@ fn generate_day(flags: &flags::NewDay) -> Result<()> {
             continue;
         }
 
-        let contents = std::fs::read_to_string(path).context("could not real file {path:?}")?;
+        let contents = std::fs::read_to_string(path)
+            .with_context(|| format!("could not read file {path:?}"))?;
         let contents = contents.replace("{{year}}", year);
         let contents = contents.replace("{{day}}", day);
-        let contents = contents.replace("{{title_snake}}", &to_snake_case(&data.title));
+        let contents = contents.replace(
+            "{{title_snake}}",
+            &to_snake_case(&data.title).replace(['?', '!'], ""),
+        );
         let contents = contents.replace("{{title}}", &data.title);
         let contents = contents.replace("{{level}}", &data.level.to_string());
         let contents = contents.replace(
@@ -161,7 +169,7 @@ fn generate_day(flags: &flags::NewDay) -> Result<()> {
             .open(new_file)?
             .write_all(contents.as_bytes())?;
     }
-    xshell::cmd!(sh, "cargo fmt -- {day_dir}").run()?;
+    xshell::cmd!(sh, "cargo fmt").run()?;
 
     Ok(())
 }

@@ -41,7 +41,10 @@ fn update(flags: &flags::Second) -> Result<()> {
 
     let data = aoc::Aoc::on_root_dir(&root_dir, &year, &day)?;
 
-    let day_dir = root_dir.join(format!("{year}/day{day:0>2}-{}", to_snake_case(&data.title)));
+    let day_dir = root_dir.join(format!(
+        "{year}/day{day:0>2}-{}",
+        to_snake_case(&data.title)
+    ));
     let path = day_dir.join("src/lib.rs");
 
     let mut string = String::new();
@@ -74,12 +77,11 @@ fn update(flags: &flags::Second) -> Result<()> {
             string.push('\n');
         }
     }
-    let mut file =
-        std::fs::OpenOptions::new()
-            .create(true)
-            .truncate(true)
-            .write(true)
-            .open(&path)?;
+    let mut file = std::fs::OpenOptions::new()
+        .create(true)
+        .truncate(true)
+        .write(true)
+        .open(&path)?;
     file.write_all(string.as_bytes())?;
     xshell::cmd!(sh, "cargo fmt -- {day_dir}").run()?;
     Ok(())

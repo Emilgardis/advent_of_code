@@ -41,10 +41,7 @@ fn update(flags: &flags::Second) -> Result<()> {
 
     let data = aoc::Aoc::on_root_dir(&root_dir, &year, &day)?;
 
-    let day_dir = root_dir.join(format!(
-        "{year}/day{day:0>2}-{}",
-        to_snake_case(&data.title)
-    ));
+    let day_dir = root_dir.join(format!("{year}/day{day:0>2}-{}", to_snake_case(&data.title)));
     let path = day_dir.join("src/lib.rs");
 
     let mut string = String::new();
@@ -77,11 +74,12 @@ fn update(flags: &flags::Second) -> Result<()> {
             string.push('\n');
         }
     }
-    let mut file = std::fs::OpenOptions::new()
-        .create(true)
-        .truncate(true)
-        .write(true)
-        .open(&path)?;
+    let mut file =
+        std::fs::OpenOptions::new()
+            .create(true)
+            .truncate(true)
+            .write(true)
+            .open(&path)?;
     file.write_all(string.as_bytes())?;
     xshell::cmd!(sh, "cargo fmt -- {day_dir}").run()?;
     Ok(())
@@ -109,10 +107,7 @@ fn generate_day(flags: &flags::NewDay) -> Result<()> {
 
     let files = walkdir::WalkDir::new(template_dir);
 
-    let day_dir = root_dir.join(format!(
-        "{year}/day{day:0>2}-{}",
-        to_snake_case(&data.title)
-    ));
+    let day_dir = root_dir.join(format!("{year}/day{day:0>2}-{}", to_snake_case(&data.title)));
 
     // Now, generate the template
     for dir_entry in files {
@@ -121,6 +116,10 @@ fn generate_day(flags: &flags::NewDay) -> Result<()> {
         if !path.is_file() {
             continue;
         }
+        if dir_entry.file_name() == ".DS_Store" {
+            continue;
+        }
+
         let contents = std::fs::read_to_string(path).context("could not real file {path:?}")?;
         let contents = contents.replace("{{year}}", year);
         let contents = contents.replace("{{day}}", day);

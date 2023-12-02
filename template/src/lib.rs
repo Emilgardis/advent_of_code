@@ -26,7 +26,7 @@ impl Solver<Year{{year}}, Day{{day}}, Part1> for Solution {
         Ok(input.lines().map(|s| s.trim()).collect())
     }
 
-    fn solve(input: &Vec<&'_ str>) -> Result<Self::Output, Report> {
+    fn solve(input: &Self::Input<'_>) -> Result<Self::Output, Report> {
         todo!()
     }
 }
@@ -40,7 +40,7 @@ impl Solver<Year{{year}}, Day{{day}}, Part2> for Solution {
         <Self as Solver<Year{{year}}, Day{{day}}, Part1>>::generate_input(input)
     }
 
-    fn solve(input: &Vec<&'_ str>) -> Result<Self::Output, Report> {
+    fn solve(input: &Self::Input<'_>) -> Result<Self::Output, Report> {
         todo!()
     }
 }

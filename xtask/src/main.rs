@@ -36,8 +36,9 @@ fn update(flags: &flags::Second) -> Result<()> {
     xshell::cmd!(sh, "aocf checkout --day {day} --year {year}").run()?;
     xshell::cmd!(sh, "aocf fetch").run()?;
     xshell::cmd!(sh, "aocf input").run()?;
+    xshell::cmd!(sh, "aocf input").run()?;
     std::thread::sleep(std::time::Duration::from_secs(2));
-
+    xshell::cmd!(sh, "aocf input").run()?;
 
     // import the data.
     let root_dir = aoc::aoc::find_root()?;
@@ -102,8 +103,10 @@ fn generate_day(flags: &flags::NewDay) -> Result<()> {
     );
     xshell::cmd!(sh, "aocf checkout --day {day} --year {year}").run()?;
     xshell::cmd!(sh, "aocf fetch").run()?;
-    xshell::cmd!(sh, "aocf input").output()?;
+    xshell::cmd!(sh, "aocf input").run()?;
+    xshell::cmd!(sh, "aocf input").run()?;
     std::thread::sleep(std::time::Duration::from_secs(2));
+    xshell::cmd!(sh, "aocf input").run()?;
 
     // import the data.
     let root_dir = aoc::aoc::find_root()?;

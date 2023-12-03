@@ -113,6 +113,7 @@
 use aoc::{parts::*, Solver};
 use eyre::Report;
 use itertools::Itertools;
+#[derive(PartialEq, Eq)]
 
 pub struct Schematic {
     board: String,
@@ -120,10 +121,12 @@ pub struct Schematic {
     height: usize,
 }
 
+#[derive(PartialEq, Eq)]
 struct Part<'a> {
     number: usize,
     touches: Symbol<'a>,
 }
+#[derive(PartialEq, Eq)]
 
 struct Symbol<'a> {
     kind: &'a str,
@@ -308,7 +311,29 @@ impl Solver<Year2023, Day3, Part2> for Solution {
     }
 
     fn solve(input: &Self::Input<'_>) -> Result<Self::Output, Report> {
-        todo!()
+        let parts = input
+            .parts()
+            .filter(|p| p.touches.kind == "*")
+            .collect_vec();
+        // get all parts with same touch idx
+        let dupes: std::collections::HashMap<_, Vec<_>> = parts
+            .iter()
+            .into_grouping_map_by(|p| p.touches.idx)
+            .collect();
+        let mut sum = 0;
+        for parts in dupes.values() {
+            if parts.len() > 2 {
+                continue
+            }
+            let Some(gear1) = parts.get(0) else {
+                continue
+            };
+            let Some(gear2) = parts.get(1) else {
+                continue
+            };
+            sum += gear1.number * gear2.number;
+        }
+        Ok(sum)
     }
 }
 
@@ -343,12 +368,21 @@ fn test_solution() -> Result<(), Report> {
 fn test_solution_second() -> Result<(), Report> {
     aoc::test_util::init();
     let input = r#"
-0
+467..114..
+...*......
+..35..633.
+......#...
+617*......
+.....+.58.
+..592.....
+......755.
+...$.*....
+.664.598..
     "#
     .trim();
     assert_eq!(
         aoc::solve_with_input::<Solution, Year2023, Day3, Part2>(input)?,
-        0
+        467835
     );
     Ok(())
 }

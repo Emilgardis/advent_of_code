@@ -1,4 +1,4 @@
-#![feature(drain_filter)]
+#![feature(extract_if)]
 //! Advent of code 2021 3
 //!
 //!! Link: <https://adventofcode.com/2021/day/3>
@@ -237,7 +237,7 @@ impl Solver<Year2021, Day3, Part2> for Solution {
                     false
                 };
                 tracing::info!("removing values that are {remove:?} for oxygen");
-                let _ = oxygen_items.drain_filter(|n| get_bit_at(*n as u32, index as u8) == remove);
+                let _ = oxygen_items.extract_if(|n| get_bit_at(*n as u32, index as u8) == remove);
                 tracing::debug!(
                     "{}",
                     oxygen_items.iter().map(|n| format!("{n:b}")).join(" ")
@@ -257,7 +257,7 @@ impl Solver<Year2021, Day3, Part2> for Solution {
                     true
                 };
                 //tracing::info!("removing values that are {remove:?} for co2");
-                co2_items.drain_filter(|n| get_bit_at(*n as u32, index as u8) == remove);
+                co2_items.extract_if(|n| get_bit_at(*n as u32, index as u8) == remove);
             }
         }
 

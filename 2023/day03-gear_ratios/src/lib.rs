@@ -6,9 +6,7 @@
 //!
 //! ## Description
 //! <!---STARTOFDESCRIPTION--->
-//! You and the Elf eventually reach a [gondola lift](https://en.wikipedia.org/wiki/Gondola_lift) station;
-//! he says the gondola lift will take you up to the *water source*, but this is
-//! as far as he can bring you. You go inside.
+//!You and the Elf eventually reach a [gondola lift](https://en.wikipedia.org/wiki/Gondola_lift) station; he says the gondola lift will take you up to the *water source*, but this is as far as he can bring you. You go inside.
 //!
 //! It doesn't take long to find the gondolas, but there seems to be a problem:
 //! they're not moving.
@@ -32,7 +30,7 @@
 //!
 //! Here is an example engine schematic:
 //!
-//! ```text
+//! ```
 //! 467..114..
 //! ...*......
 //! ..35..633.
@@ -53,9 +51,60 @@
 //! Of course, the actual engine schematic is much larger. *What is the sum of
 //! all of the part numbers in the engine schematic?*
 //!
-//! To begin, [get your puzzle input](3/input).
+//! Your puzzle answer was `559667`.
+//!
+//! The first half of this puzzle is complete! It provides one gold star: \*
+//!
+//! \--- Part Two ---
+//! ----------
+//!
+//! The engineer finds the missing part and installs it in the engine! As the
+//! engine springs to life, you jump in the closest gondola, finally ready to
+//! ascend to the water source.
+//!
+//! You don't seem to be going very fast, though. Maybe something is still
+//! wrong? Fortunately, the gondola has a phone labeled "help", so you pick it
+//! up and the engineer answers.
+//!
+//! Before you can explain the situation, she suggests that you look out the
+//! window. There stands the engineer, holding a phone in one hand and waving
+//! with the other. You're going so slowly that you haven't even left the
+//! station. You exit the gondola.
+//!
+//! The missing part wasn't the only issue - one of the gears in the engine is
+//! wrong. A *gear* is any `*` symbol that is adjacent to *exactly two part
+//! numbers*. Its *gear ratio* is the result of multiplying those two numbers
+//! together.
+//!
+//! This time, you need to find the gear ratio of every gear and add them all up
+//! so that the engineer can figure out which gear needs to be replaced.
+//!
+//! Consider the same engine schematic again:
+//!
+//! ```
+//! 467..114..
+//! ...*......
+//! ..35..633.
+//! ......#...
+//! 617*......
+//! .....+.58.
+//! ..592.....
+//! ......755.
+//! ...$.*....
+//! .664.598..
+//! ```
+//!
+//! In this schematic, there are *two* gears. The first is in the top left; it
+//! has part numbers `467` and `35`, so its gear ratio is `16345`. The second
+//! gear is in the lower right; its gear ratio is `451490`. (The `*` adjacent to
+//! `617` is *not* a gear because it is only adjacent to one part number.)
+//! Adding up all of the gear ratios produces `*467835*`.
+//!
+//! *What is the sum of all of the gear ratios in your engine schematic?*
 //!
 //! Answer:
+//!
+//! Although it hasn't changed, you can still [get your puzzle input](3/input).
 //! <!---ENDOFDESCRIPTION--->
 //! ## Notes
 //!
@@ -70,6 +119,17 @@ pub struct Schematic {
     width: usize,
     height: usize,
 }
+
+struct Part<'a> {
+    number: usize,
+    touches: Symbol<'a>,
+}
+
+struct Symbol<'a> {
+    kind: &'a str,
+    idx: usize,
+}
+
 impl Schematic {
     fn get_2d_from_1d(&self, idx: usize) -> (usize, usize) {
         (idx % self.width, idx / self.width)
@@ -128,7 +188,7 @@ impl Schematic {
     /// let schematic = Schematic::new(board);
     /// assert!(!schematic.touches_symbol(8..9), "not touching");
     /// ```
-    pub fn touches_symbol(&self, range: std::ops::Range<usize>) -> bool {
+    pub fn touches_symbol(&self, range: std::ops::Range<usize>) -> Option<Symbol> {
         let (s, e) = (range.start, range.end);
         let (left, right) = {
             // If adding or subtracting 1 would go over to the next line, skip
@@ -147,20 +207,19 @@ impl Schematic {
         let left_s = &self.board[(s + left).saturating_sub(2)..(s + left).saturating_sub(1)];
 
         if !left_s.is_empty() && !left_s.contains(|c: char| c == '.' || c.is_ascii_digit()) {
-            eprintln!(
-                "touching left: {}",
-                &self.board[(s + left).saturating_sub(2)..(s + left).saturating_sub(1)]
-            );
-            return true;
+            eprintln!("touching left: {}", &left_s);
+            return Some(Symbol {
+                kind: left_s,
+                idx: (s + left).saturating_sub(2),
+            });
         }
-        if !self.board[e - 1 + right..e + right].contains(|c: char| c == '.' || c.is_ascii_digit())
-        {
-            eprintln!(
-                "touching right {}",
-                self.board[e - 1 + right..e + right]
-                    .contains(|c: char| c == '.' || c.is_ascii_digit())
-            );
-            return true;
+        let right_s = &self.board[e - 1 + right..e + right];
+        if !right_s.contains(|c: char| c == '.' || c.is_ascii_digit()) {
+            eprintln!("touching right {}", right_s);
+            return Some(Symbol {
+                kind: right_s,
+                idx: e - 1 + right,
+            });
         }
         // look up and down
         for i in s.saturating_sub(left)..e.saturating_add(right) {
@@ -168,7 +227,7 @@ impl Schematic {
                 if let Some(s) = self.board.get(up..up + 1) {
                     if !s.contains(|c: char| c == '.' || c.is_ascii_digit()) {
                         eprintln!("touching up: {s}");
-                        return true;
+                        return Some(Symbol { kind: s, idx: up });
                     }
                 }
             };
@@ -176,14 +235,14 @@ impl Schematic {
                 if let Some(s) = self.board.get(down..down + 1) {
                     if !s.contains(|c: char| c == '.' || c.is_ascii_digit()) {
                         eprintln!("touching down: {s}");
-                        return true;
+                        return Some(Symbol { kind: s, idx: down });
                     }
                 }
             };
         }
-        false
+        None
     }
-    fn parts(&self) -> impl Iterator<Item = usize> + '_ {
+    fn parts(&self) -> impl Iterator<Item = Part<'_>> + '_ {
         // split on dots
         self.board
             .split('.')
@@ -192,29 +251,32 @@ impl Schematic {
                 s.split(|c: char| !c.is_ascii_digit())
             })
             .filter(|s| !s.is_empty())
-            .filter_map(|mut symbol| {
-                if !symbol.contains(|c: char| !c.is_ascii_digit()) {
+            .filter_map(|word| {
+                if !word.contains(|c: char| !c.is_ascii_digit()) {
                     // get the index of the substring
                     let start = self.board.as_ptr() as usize;
-                    let range = symbol.as_bytes().as_ptr_range();
+                    let range = word.as_bytes().as_ptr_range();
                     let (s_start, s_end) =
                         (range.start as usize - start, range.end as usize - start);
 
                     // sanity
-                    debug_assert_eq!(symbol, &self.board[s_start..s_end]);
+                    debug_assert_eq!(word, &self.board[s_start..s_end]);
 
-                    print!("checking: {symbol}, {}..{} -- ", s_start, s_end);
+                    print!("checking: {word}, {}..{} -- ", s_start, s_end);
                     let res = self
                         .touches_symbol(s_start..s_end)
-                        .then(|| symbol.parse::<usize>().expect("a number"));
+                        .map(|symbol: Symbol<'_>| Part {
+                            number: word.parse::<usize>().unwrap(),
+                            touches: symbol,
+                        });
                     if res.is_some() {
-                        println!("{symbol} is a part");
+                        println!("{word} is a part");
                     } else {
-                        println!("{symbol} is not a part");
+                        println!("{word} is not a part");
                     }
                     res
                 } else {
-                    println!("{symbol} is not a part");
+                    println!("{word} is not a part");
 
                     None
                 }
@@ -232,7 +294,7 @@ impl Solver<Year2023, Day3, Part1> for Solution {
     }
 
     fn solve(input: &Self::Input<'_>) -> Result<Self::Output, Report> {
-        Ok(input.parts().sum())
+        Ok(input.parts().map(|p| p.number).sum())
     }
 }
 

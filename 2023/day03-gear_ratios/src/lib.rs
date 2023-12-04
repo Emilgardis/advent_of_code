@@ -323,14 +323,10 @@ impl Solver<Year2023, Day3, Part2> for Solution {
         let mut sum = 0;
         for parts in dupes.values() {
             if parts.len() > 2 {
-                continue
+                continue;
             }
-            let Some(gear1) = parts.get(0) else {
-                continue
-            };
-            let Some(gear2) = parts.get(1) else {
-                continue
-            };
+            let Some(gear1) = parts.get(0) else { continue };
+            let Some(gear2) = parts.get(1) else { continue };
             sum += gear1.number * gear2.number;
         }
         Ok(sum)

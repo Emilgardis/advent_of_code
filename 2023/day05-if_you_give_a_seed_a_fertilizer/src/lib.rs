@@ -198,15 +198,16 @@
 //!
 //! *
 
+use std::ops::Range;
+
 use aoc::{parts::*, Solver};
 use eyre::Report;
 use itertools::Itertools;
 
 #[derive(Debug)]
 pub struct MapLine {
-    destination_range_start: usize,
-    source_range_start: usize,
-    range_length: usize,
+    range: Range<u64>,
+    offset: i64,
 }
 
 impl MapLine {
@@ -215,10 +216,12 @@ impl MapLine {
             .split(' ')
             .collect_tuple()
             .ok_or_else(|| eyre::eyre!("couldn't collect numbers"))?;
+        let destination_range_start: u64 = destination_range_start.parse()?;
+        let source_range_start: u64 = source_range_start.parse()?;
+        let range_length: u64 = range_length.parse()?;
         Ok(MapLine {
-            destination_range_start: destination_range_start.parse()?,
-            source_range_start: source_range_start.parse()?,
-            range_length: range_length.parse()?,
+            range: source_range_start..source_range_start + range_length,
+            offset: (destination_range_start as i64) - (source_range_start as i64),
         })
     }
 
@@ -252,9 +255,9 @@ impl MapLine {
     /// let map_line = MapLine::new("49 53 8").unwrap();
     /// assert_eq!(map_line.translate(53), Some(49));
     /// ```
-    pub fn translate(&self, from: usize) -> Option<usize> {
-        if (self.source_range_start..self.source_range_start + self.range_length).contains(&from) {
-            Some(self.destination_range_start + (from - self.source_range_start))
+    pub fn translate(&self, from: u64) -> Option<u64> {
+        if self.range.contains(&from) {
+            Some((from as i64 + self.offset) as u64)
         } else {
             None
         }
@@ -286,12 +289,19 @@ impl<'a> Map<'a> {
             lines: lines.map(MapLine::new).try_collect()?,
         })
     }
+
+    fn translate(&self, seed: u64) -> u64 {
+        self.lines
+            .iter()
+            .find_map(|line| line.translate(seed))
+            .unwrap_or(seed)
+    }
 }
 
 impl Solver<Year2023, Day5, Part1> for Solution {
-    type Input<'a> = (Vec<usize>, Vec<Map<'a>>);
+    type Input<'a> = (Vec<u64>, Vec<Map<'a>>);
 
-    type Output = usize;
+    type Output = u64;
 
     fn generate_input(input: &'_ str) -> Result<Self::Input<'_>, Report> {
         let (seeds, maps) = input
@@ -317,11 +327,7 @@ impl Solver<Year2023, Day5, Part1> for Solution {
         for seed in seeds {
             let mut seed = *seed;
             for map in maps {
-                seed = map
-                    .lines
-                    .iter()
-                    .find_map(|line| line.translate(seed))
-                    .unwrap_or(seed);
+                seed = map.translate(seed);
             }
             if lowest.is_none() || seed < lowest.unwrap() {
                 lowest = Some(seed);
@@ -347,7 +353,7 @@ impl Solver<Year2023, Day5, Part2> for Solution {
             .map(|seed| seed.parse().expect("couldn't parse"))
             .array_chunks()
             .fuse()
-            .flat_map(|[start, range]: [usize;2] | start..(start+range))
+            .flat_map(|[start, range]: [u64; 2]| start..(start + range))
             .collect();
         let maps = maps
             .trim()

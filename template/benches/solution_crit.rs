@@ -6,7 +6,7 @@ use y{{year}}_day{{day}}_{{title_snake}}::Solution;
 pub fn criterion_benchmark(c: &mut Criterion) {
     let input = aoc::Aoc::new(&{{year}}u32, &{{day}}u32).unwrap().input;
     c.bench_with_input(
-        criterion::BenchmarkId::new("solve part1", "using given input"),
+        criterion::BenchmarkId::new("solve {year}} day {{day}} part1", "using given input"),
         &input,
         |b, input| {
             b.iter(|| {
@@ -21,7 +21,7 @@ pub fn criterion_benchmark(c: &mut Criterion) {
     );
 
     c.bench_with_input(
-        criterion::BenchmarkId::new("solve part2", "using given input"),
+        criterion::BenchmarkId::new("solve {year}} day {{day}} part2", "using given input"),
         &input,
         |b, input| {
             b.iter(|| {

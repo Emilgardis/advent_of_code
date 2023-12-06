@@ -6,7 +6,7 @@ use y2023_day6_wait_for_it::Solution;
 pub fn criterion_benchmark(c: &mut Criterion) {
     let input = aoc::Aoc::new(&2023u32, &6u32).unwrap().input;
     c.bench_with_input(
-        criterion::BenchmarkId::new("solve part1", "using given input"),
+        criterion::BenchmarkId::new("solve 2023 day 6 part1", "using given input"),
         &input,
         |b, input| {
             b.iter(|| {
@@ -21,7 +21,7 @@ pub fn criterion_benchmark(c: &mut Criterion) {
     );
 
     c.bench_with_input(
-        criterion::BenchmarkId::new("solve part2", "using given input"),
+        criterion::BenchmarkId::new("solve 2023 day 6 part2", "using given input"),
         &input,
         |b, input| {
             b.iter(|| {

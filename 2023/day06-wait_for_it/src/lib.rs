@@ -152,13 +152,13 @@ impl Solver<Year2023, Day6, Part1> for Solution {
         let time = input
             .next()
             .unwrap()
-            .split_whitespace()
+            .split_ascii_whitespace()
             .skip(1)
             .map(|s| s.parse());
         let distance = input
             .next()
             .unwrap()
-            .split_whitespace()
+            .split_ascii_whitespace()
             .skip(1)
             .map(|s| s.parse());
         time.zip(distance).map(|(a, b)| Ok((a?, b?))).collect()
@@ -186,10 +186,10 @@ impl Solver<Year2023, Day6, Part1> for Solution {
             //     - ((allowed_time.pow(2) + 4 * record_distance) as f64).sqrt())
             //     / 2.0;
             let eps = 0.01;
-            let roots = [
-                a / 2.0 - (a.powi(2) - 4.0 * r).sqrt() / 2.0 + eps,
-                a / 2.0 + (a.powi(2) - 4.0 * r).sqrt() / 2.0 - eps,
-            ];
+            let left = (a.powi(2) - 4.0 * r).sqrt()/2.0;
+            let roots = [a / 2.0 - left + eps, a / 2.0 + left - eps];
+            // (a/2 + left) - (a/2 - left) + 1 =>
+            // left*2 + 1
             let count = roots[1].trunc() as u64 - roots[0].ceil() as u64 + 1;
             //println!("roots: {roots:?} - count: {count}",);
             prod *= count;
@@ -208,14 +208,14 @@ impl Solver<Year2023, Day6, Part2> for Solution {
         let time = input
             .next()
             .unwrap()
-            .split_whitespace()
+            .split_ascii_whitespace()
             .skip(1)
             .collect::<String>()
             .parse()?;
         let distance = input
             .next()
             .unwrap()
-            .split_whitespace()
+            .split_ascii_whitespace()
             .skip(1)
             .collect::<String>()
             .parse()?;

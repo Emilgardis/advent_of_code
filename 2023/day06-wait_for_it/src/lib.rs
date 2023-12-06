@@ -172,7 +172,7 @@ impl Solver<Year2023, Day6, Part1> for Solution {
         // we want to find the point
         // button_time * (allowed_time - button_time) = record_distance
         // if we expand the expression, we get
-        // -buttom_time^2 + allowed_time * button_time = record_distance
+        // -button_time^2 + allowed_time * button_time = record_distance
         // which is a formula  like -x^2 + bx + c = 0
         // so we can solve it with the quadratic formula
         let mut prod = 1;

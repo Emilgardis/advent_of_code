@@ -186,12 +186,13 @@ impl Solver<Year2023, Day6, Part1> for Solution {
             //     - ((allowed_time.pow(2) + 4 * record_distance) as f64).sqrt())
             //     / 2.0;
             let eps = 0.01;
-            let left = (a.powi(2) - 4.0 * r).sqrt()/2.0;
+            let left = (a.powi(2) - 4.0 * r).sqrt() / 2.0;
             let roots = [a / 2.0 - left + eps, a / 2.0 + left - eps];
             // this simplifies (ignoreing ceil and floor), can we use that fact?
             // floor(a/2 + left) - ceil(a/2 - left) + 1 =>
             // left*2 + 1
-            // i'm not sure, the tricky part is that we need to offset by integer amounts also
+            // i'm not sure, the tricky part is that we need to offset by integer amounts
+            // also
             let count = roots[1].trunc() as u64 - roots[0].ceil() as u64 + 1;
             //println!("roots: {roots:?} - count: {count}",);
             prod *= count;

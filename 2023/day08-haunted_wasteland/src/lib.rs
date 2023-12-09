@@ -194,7 +194,6 @@ impl Solver<Year2023, Day8, Part1> for Solution {
             instructions,
         };
         lines.next();
-
         lines.try_for_each(|s| {
             let Some((wp, leftright)) = s.split_once(" = ") else {
                 eyre::bail!("no map found: {s}")
@@ -225,7 +224,7 @@ impl Solver<Year2023, Day8, Part1> for Solution {
         let mut steps = 0;
         println!("{map:?}");
         let mut current = &Waypoint("AAA");
-        for instruction in std::iter::repeat_with(|| map.instructions.iter()).flatten() {
+        for instruction in map.instructions.iter().cycle() {
             if current == &Waypoint("ZZZ") {
                 break;
             }
@@ -254,18 +253,19 @@ impl Solver<Year2023, Day8, Part2> for Solution {
     }
 
     fn solve(map: &Self::Input<'_>) -> Result<Self::Output, Report> {
-        let mut steps = 0;
         println!("{map:?}");
         let mut current = map
             .map
             .keys()
             .filter(|&wp| wp.0.ends_with('A'))
             .collect_vec();
-        for instruction in std::iter::repeat_with(|| map.instructions.iter()).flatten() {
-            if current.iter().all(|&wp| wp.0.ends_with('Z')) {
-                break;
-            }
-            for current in current.iter_mut() {
+        let mut counts = Vec::new();
+        for current in current.iter_mut() {
+            let mut count = 0i64;
+            for instruction in map.instructions.iter().cycle() {
+                if current.0.ends_with('Z') {
+                    break;
+                }
                 let leftright = map
                     .map
                     .get(current)
@@ -273,12 +273,35 @@ impl Solver<Year2023, Day8, Part2> for Solution {
                 *current = match &instruction {
                     b'L' => &leftright.left,
                     b'R' => &leftright.right,
-                    _ => unsafe { std::hint::unreachable_unchecked() },
+                    _ => unreachable!(),
                 };
+                count += 1;
             }
-            steps += 1;
+            counts.push(count);
         }
-        Ok(steps)
+        Ok(counts.into_iter().reduce(lcm).unwrap() as usize)
+    }
+}
+
+fn lcm(first: i64, second: i64) -> i64 {
+    first * second / gcd(first, second)
+}
+
+fn gcd(first: i64, second: i64) -> i64 {
+    let mut max = first;
+    let mut min = second;
+    if min > max {
+        std::mem::swap(&mut max, &mut min);
+    }
+
+    loop {
+        let res = max % min;
+        if res == 0 {
+            return min;
+        }
+
+        max = min;
+        min = res;
     }
 }
 

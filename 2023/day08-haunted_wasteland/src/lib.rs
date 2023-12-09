@@ -169,7 +169,10 @@ impl<'a> std::fmt::Debug for Map<'a> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         f.debug_struct("Map")
             .field("map", &self.map)
-            .field("instructions", &std::str::from_utf8(self.instructions).unwrap())
+            .field(
+                "instructions",
+                &std::str::from_utf8(self.instructions).unwrap(),
+            )
             .finish()
     }
 }

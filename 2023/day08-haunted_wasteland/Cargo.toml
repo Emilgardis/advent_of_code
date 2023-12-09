@@ -1,0 +1,20 @@
+[package]
+name = "y2023_day8-haunted_wasteland"
+version = "0.1.0"
+edition = "2021"
+publish = false
+license = "MIT OR Apache-2.0"
+
+[dependencies]
+aoc = { path = "../.." }
+eyre = "0.6"
+tracing = "0.1"
+itertools = "0.10"
+color-eyre = "0.6.2"
+
+[dev-dependencies]
+criterion = "0.4.0"
+
+[[bench]]
+name = "solution_crit"
+harness = false

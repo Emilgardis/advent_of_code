@@ -3,11 +3,6 @@
 //! Link: <https://adventofcode.com/{{year}}/day/{{day}}>
 //!
 //! Good luck!
-//!
-//! ## Description
-//! <!---STARTOFDESCRIPTION--->
-//! {{brief}}
-//! <!---ENDOFDESCRIPTION--->
 //! ## Notes
 //!
 //! *
